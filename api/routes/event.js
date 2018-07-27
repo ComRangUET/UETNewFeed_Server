@@ -6,19 +6,15 @@ const eventController = require('../../controller/eventController');
 
 //list event and MSSV join
 
-router.get('/listjoin', eventController.getInformationEvent);
-
-//all event need student  
-
-router.get('/', eventController.getInformationEvent);
+router.get('/get_list_event', eventController.getListEvent);
 
 //post event
 
-router.post('/pst', eventController.postEvent);
+router.post('/post_event', eventController.postEvent);
 
 //delete event at id
 
-router.delete('/:id',eventController.deleteEvent);
+router.delete('/delete_event/:id',eventController.deleteEvent);
 
 //updata header, place of event has id
 
