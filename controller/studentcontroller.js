@@ -11,14 +11,9 @@ function getInformation(req, res){
 }
 
 function changeEmailAndNumber(req, res){
-    var emailsv = req.body.email;
-    var sodt = req.body.sodienthoai;
-    var maso = req.body.masosv;
-    if(sodt=="")
-        var sql = `UPDATE student SET email = "${req.body.email}"  WHERE masv = ${req.body.masosv}`;
-    else if(emailsv=="")
-        var sql = `UPDATE student SET sodienthoai = "${req.body.sodienthoai}" WHERE masv = ${req.body.masosv} `;
-    else    var sql = `UPDATE student SET  email = "${req.body.email}", sodienthoai = "${req.body.sodienthoai}" WHERE masv = ${req.body.masosv} `;
+    const emailsv = req.body.email;
+    const sodt = req.body.sodienthoai;
+    const sql = `UPDATE student SET  email = "${emailsv}", sodienthoai = "${sodt}" WHERE sv_id = ${req.tokenData.idaccount} `;
     conn.query(sql, function(err,result){
         if(err) console.log(err);
         else{
@@ -32,7 +27,7 @@ function changeEmailAndNumber(req, res){
 }
 
 function studentJoinEvent(req, res){
-    let sql = `INSERT INTO student_join_event(id_stu, id_eve) value(${req.body.id_sv}, ${req.body.id_event})`;
+    let sql = `INSERT INTO student_join_event(id_stu, id_eve) value(${req.tokenData.idaccount}, ${req.body.id_event})`;
     conn.query(sql, function(err, result){
         if(err) console.log(err);
         else{

@@ -6,7 +6,6 @@ function findStudentByIdFromDataBase(req, res){
 
     conn.query(sql, function(err, result){
         if(err){
-            
             res.send(err);
         }
         else{

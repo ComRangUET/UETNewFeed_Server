@@ -2,7 +2,7 @@ const request = require('request');
 const cheerio = require('cheerio');
 const fs = require('fs');
 const scrapeEvent = require('./scrapeEvent');
-const url = 'https://uet.vnu.edu.vn/category/tin-tong-hop/';
+const url = 'https://uet.vnu.edu.vn/category/tin-tuc/tin-sinh-vien/';
 
 module.exports = function scanAndUpNews(){
         request(url, (err, Response, body) => {
@@ -14,16 +14,20 @@ module.exports = function scanAndUpNews(){
             for(let i =16; i<=20; i++){
                 id += classNameList1[i];
             }
+            
             if(id !== idFile) {
                 console.log(true);
                 const srcImage = $('#content div.blog-listing').children().eq(0).children().eq(0).children().eq(0).children().eq(0).children().eq(0).children().eq(0).children().eq(0).children().eq(0).attr('src');
                 const urlScrapePage = $('#content div.blog-listing ').children().eq(0).children().eq(0).children().eq(0).children().eq(0).children().eq(0).children().eq(0).children().eq(0).attr('href');
-                scrapeEvent.postPageToDatabase(urlScrapePage,srcImage);
+                const referrence = $('#content div.blog-listing').children().eq(0).children().eq(0).children().eq(1).children().eq(0).children().eq(0).children().eq(1).text();
+                scrapeEvent.postPageToDatabase(urlScrapePage,referrence,srcImage);
                 fs.writeFile(__dirname+'/text.txt', id, 'utf8',(err) => {
                     if(err) {
                         console.log(err);
                     }
                 })
+            } else {
+                return;
             } 
     });
 }
