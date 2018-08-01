@@ -5,7 +5,7 @@ function register(req, res) {
     con.query('SELECT * FROM account WHERE user = ?', req.body.user, (err, rows) => {
         if (err) throw err;
         if (rows.length === 0) {
-            con.query('INSERT INTO account(id_account,user,password) VALUES (?,?,?)', [req.body.id, req.body.user, req.body.password], (err, result, feilds) => {
+            con.query('INSERT INTO account(id,user,password) VALUES (?,?,?)', [req.body.id, req.body.user, req.body.password], (err, result, feilds) => {
                 if (!err) {
                     console.log('success');
                     res.status(201).json({
