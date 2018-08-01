@@ -42,7 +42,7 @@ function login(req, res) {
             if (rows.length > 0) {
                 console.log(rows[0]);
                 if (rows[0].password == password) {
-                    const token = jwt.sign({ idaccount: rows[0].id_account }, process.env.SECRET_KEY, {
+                    const token = jwt.sign({ idaccount: rows[0].id, role: rows[0].role_id }, process.env.SECRET_KEY, {
                         expiresIn: 10000
                     })
                     res.status(200).json({

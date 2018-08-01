@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const newsController = require('../../controller/newsController')
-const verifyModel = require('../../model/verify');
+const verifyPrivileges = require('../../model/verifyPrivileges');
 // get all news 
 
-router.get('/', newsController.getNewsList);
+router.get('/', verifyPrivileges('nhan thong tin'), newsController.getNewsList);
 
 module.exports = router;
