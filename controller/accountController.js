@@ -5,7 +5,7 @@ function register(req, res) {
     con.query('SELECT * FROM account WHERE user = ?', req.body.user, (err, rows) => {
         if (err) throw err;
         if (rows.length === 0) {
-            con.query('INSERT INTO account(id_account,user,password) VALUES (?,?,?)', [req.body.id, req.body.user, req.body.password], (err, result, feilds) => {
+            con.query('INSERT INTO account(id,user,password) VALUES (?,?,?)', [req.body.id, req.body.user, req.body.password], (err, result, feilds) => {
                 if (!err) {
                     console.log('success');
                     res.status(201).json({
@@ -42,7 +42,7 @@ function login(req, res) {
             if (rows.length > 0) {
                 console.log(rows[0]);
                 if (rows[0].password == password) {
-                    const token = jwt.sign({ idaccount: rows[0].id_account }, process.env.SECRET_KEY, {
+                    const token = jwt.sign({ idaccount: rows[0].id, role: rows[0].role_id }, process.env.SECRET_KEY, {
                         expiresIn: 10000
                     })
                     res.status(200).json({
