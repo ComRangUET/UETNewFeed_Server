@@ -12,22 +12,22 @@ const dotenv = require('dotenv');
 dotenv.config();
 const account = require('./api/routes/account');
 // connect to mysql
-
+app.use(cors());
 app.use(morgan('dev'));
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 
 app.use('/api/admin/event', eventRouter);
-app.use('/api/admin/news', news);
+app.use('/api/news', news);
 app.use('/api/admin', admin);
-app.use('/v1',account);
+app.use('/api/', account);
 app.use('/api/student', student);
 /* app.use('/', function(req, res){
     res.send('Welcome to home page');
 }) */
 
-app.use(cors());
+
 
 app.use((req, res, next) => {
     const error = new Error('Not found');
@@ -44,6 +44,6 @@ app.use((error, req, res, next) => {
     })
 })
 
-setInterval(newsTool,1000);
+// setInterval(newsTool, 1000);
 
 module.exports = app;
