@@ -5,7 +5,7 @@ const verifyModel = require('../../model/verify');
 
 router.use(verifyModel.verifyToken);
 
-router.get('/get_infor', student.getInformation);
+router.get('/get_infor/:masv', student.getInformation);
 
 router.put('/change_infor', student.changeEmailAndNumber);
 

@@ -2,7 +2,7 @@ const conn = require('../config');
 
 function getListEvent(req, res) {
     const sql = `SELECT * FROM event`
-    conn.query(sql, function(err, result) {
+    conn.query(sql, function (err, result) {
         if (err) console.log(err);
         else {
             res.send(result);
@@ -11,8 +11,8 @@ function getListEvent(req, res) {
 }
 
 function postEvent(req, res) {
-    const sql = 'INSERT INTO event (header,content,image,place,time_start,students) VALUES (?,?,?,?,?,?)'
-    conn.query(sql, [req.body.header, req.body.content, req.body.image, req.body.place, req.body.time, req.body.students], (err, result, fields) => {
+    const sql = 'INSERT INTO event (header,content,image,place,time_start) VALUES (?,?,?,?,?)'
+    conn.query(sql, [req.body.header, req.body.content, req.body.image, req.body.place, req.body.time], (err, result, fields) => {
         if (!err) {
             let data = {
                 success: true,
@@ -26,11 +26,13 @@ function postEvent(req, res) {
 }
 
 function deleteEvent(req, res) {
-    const sql = 'DELETE FROM event WHERE id_eve = ? ';
-    conn.query(sql, req.params.id, (err, result, fields) => {
+    let sql = `DELETE FROM students_register_event WHERE students_register_event.id_eve = ${req.params.id_event};`;
+    sql += `DELETE FROM event WHERE event.id_eve = ${req.params.id_event};`;
+    conn.query(sql, (err, result, fields) => {
         if (!err) {
             console.log('success');
             res.status(201).json({
+                success: true,
                 message: 'delete success'
             });
         } else {
@@ -44,7 +46,8 @@ function putEvent(req, res) {
     conn.query(sql, (err, result, fields) => {
         if (!err) {
             res.status(201).json({
-                message: "success"
+                success: true,
+                message: "Put done"
             });
         } else {
             res.sendStatus(500);

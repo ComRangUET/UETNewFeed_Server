@@ -1,22 +1,24 @@
 const conn = require('../config');
 
-function getInformation(req, res){
-    let sql = `SELECT * from student inner join diemchuyencan on diemchuyencan.id = student.sv_id WHERE student.masv = ${req.params.masv}`;
-    conn.query(sql, function(err, result){
-        if(err) console.log(err);
-        else{
-            res.send(result);
+function getInformation(req, res) {
+    let sql = `SELECT * from account WHERE account.MSSV = ${req.params.masv}`;
+    conn.query(sql, function (err, result) {
+        if (err) console.log(err);
+        else {
+            res.json({
+                success: true,
+                data: result
+            })
         }
     })
 }
 
-function changeEmailAndNumber(req, res){
-    const emailsv = req.body.email;
-    const sodt = req.body.sodienthoai;
-    const sql = `UPDATE student SET  email = "${emailsv}", sodienthoai = "${sodt}" WHERE sv_id = ${req.tokenData.idaccount} `;
-    conn.query(sql, function(err,result){
-        if(err) console.log(err);
-        else{
+function changeEmailAndNumber(req, res) {
+    var sql = `UPDATE account SET  email = "${req.body.email}", phone_numbers = "${req.body.phone_numbers}", class = "${req.body.class}", faculty = "${req.body.faculty}",
+    course = "${req.body.course}", full_name = "${req.body.full_name}" WHERE MSSV = ${req.body.mssv} `;
+    conn.query(sql, function (err, result) {
+        if (err) console.log(err);
+        else {
             data = {
                 success: true,
                 message: "Updated"
@@ -26,11 +28,11 @@ function changeEmailAndNumber(req, res){
     })
 }
 
-function studentJoinEvent(req, res){
-    let sql = `INSERT INTO student_join_event(id_stu, id_eve) value(${req.tokenData.idaccount}, ${req.body.id_event})`;
-    conn.query(sql, function(err, result){
-        if(err) console.log(err);
-        else{
+function studentJoinEvent(req, res) {
+    let sql = `INSERT INTO students_register_event(id_stu, id_eve) value(${req.body.id_sv}, ${req.body.id_event})`;
+    conn.query(sql, function (err, result) {
+        if (err) console.log(err);
+        else {
             let dataresult = {
                 success: true,
                 data: "Register join done"

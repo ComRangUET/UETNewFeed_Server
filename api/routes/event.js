@@ -14,7 +14,7 @@ router.post('/post_event', eventController.postEvent);
 
 //delete event at id
 
-router.delete('/delete_event/:id',eventController.deleteEvent);
+router.delete('/delete_event/:id_event',eventController.deleteEvent);
 
 //updata header, place of event has id
 
