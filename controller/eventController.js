@@ -26,19 +26,29 @@ function postEvent(req, res) {
 }
 
 function deleteEvent(req, res) {
-    let sql = `DELETE FROM students_register_event WHERE students_register_event.id_eve = ${req.params.id_event};`;
-    sql += `DELETE FROM event WHERE event.id_eve = ${req.params.id_event};`;
-    conn.query(sql, (err, result, fields) => {
-        if (!err) {
-            console.log('success');
-            res.status(201).json({
-                success: true,
-                message: 'delete success'
-            });
-        } else {
-            console.log(err);
-        }
-    });
+    try {
+        let sql1 = `DELETE FROM students_register_event WHERE students_register_event.id_event = ${req.params.id_event};`;
+        conn.query(sql1, function (err, resulw) {
+            if(err) throw err;
+        });
+        let sql2 = `DELETE FROM event WHERE event.id_eve = ${req.params.id_event};`;
+        conn.query(sql2, (err, result, fields) => {
+            if (!err) {
+                console.log('success');
+                res.status(201).json({
+                    success: true,
+                    message: 'delete success'
+                });
+            } else {
+                console.log(err);
+            }
+        });
+    }
+    catch(error)
+    {
+        if(error)  
+            throw error;
+    }
 }
 
 function putEvent(req, res) {

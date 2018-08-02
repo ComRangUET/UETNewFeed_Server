@@ -17,4 +17,23 @@ function getNewsList(req, res) {
     }
 }
 
+function getNew(req, res){
+    const sql = `SELECT id_news, news_reference.header, content, introduce_news, image  FROM news_reference inner join news on news_reference.id_news = news.idnews WHERE news_reference.id_news= ${req.params.id_news}`;
+    try{
+        conn.query(sql, function(err, result){
+            if(!err)   
+                res.json({
+                    success: true,
+                    data: result
+                })
+            else throw err;
+        });
+    }
+    catch(error)
+    {
+        throw error;
+    }
+}
+
 module.exports.getNewsList = getNewsList;
+module.exports.getNew = getNew;
