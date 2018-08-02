@@ -14,8 +14,7 @@ function getInformation(req, res) {
 }
 
 function changeEmailAndNumber(req, res) {
-    var sql = `UPDATE account SET  email = "${req.body.email}", phone_numbers = "${req.body.phone_numbers}", class = "${req.body.class}", faculty = "${req.body.faculty}",
-    course = "${req.body.course}", full_name = "${req.body.full_name}" WHERE MSSV = ${req.body.mssv} `;
+    const sql = `UPDATE account SET  email = "${req.body.email}", phonenumber = "${req.body.phonenumber} WHERE MSSV = ${req.tokenData.idaccount} `;
     conn.query(sql, function(err, result) {
         if (err) console.log(err);
         else {

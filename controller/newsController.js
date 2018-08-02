@@ -1,7 +1,5 @@
 const conn = require('../config');
 
-
-
 function getNewsList(req, res) {
     const sql = 'SELECT * FROM news';
     try {
