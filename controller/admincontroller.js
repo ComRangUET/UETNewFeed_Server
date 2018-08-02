@@ -4,12 +4,11 @@ const conn = require('../config');
 function findStudentByIdFromDataBase(req, res) {
     let sql = `SELECT * FROM account WHERE id = ${req.params.id}`;
 
-    conn.query(sql, function (err, result) {
+    conn.query(sql, function(err, result) {
         if (err) {
 
             res.send(err);
-        }
-        else {
+        } else {
             res.send(result);
         }
     })
@@ -18,12 +17,11 @@ function findStudentByIdFromDataBase(req, res) {
 function findStudentByMSSVFromDataBase(req, res) {
     let sql = `SELECT * FROM account WHERE MSSV = ${req.params.masv}`;
 
-    conn.query(sql, function (err, result) {
+    conn.query(sql, function(err, result) {
         if (err) {
 
             res.send(err);
-        }
-        else {
+        } else {
             res.send(result);
         }
     })
@@ -56,12 +54,12 @@ function addStudentToDataBase(req, res) {
         password: req.body.password,
         MSSV: req.body.masv
     };
-    conn.query(sql, person, function (err, result) {
+    conn.query(sql, person, function(err, result) {
         if (err) console.log(err);
         else {
             res.send({
                 success: true,
-                message: "add done" 
+                message: "add done"
             });
         }
     })
@@ -70,7 +68,7 @@ function addStudentToDataBase(req, res) {
 
 function selectAllStudentsFromDataBase(req, res) {
     let sql = 'SELECT * FROM account ';
-    conn.query(sql, function (err, result) {
+    conn.query(sql, function(err, result) {
         if (err) console.log(err);
         else {
             res.send(result);
@@ -79,11 +77,12 @@ function selectAllStudentsFromDataBase(req, res) {
 }
 
 function getInforEventAndStudentsFromDatabase(req, res) {
-    let sql = `SELECT * FROM students_event 
-    INNER JOIN  account  ON account.id = students_event.id_stu 
-    INNER JOIN event ON event.id_eve = students_event.id_eve 
-    WHERE students_event.id_eve = ${req.params.id_event}`;
-    conn.query(sql, function (err, result) {
+    let sql = `SELECT * FROM students_register_event 
+    INNER JOIN  account  ON account.id = students_register_event.id_stu 
+    INNER JOIN event ON event.id_eve = students_register_event.id_eve 
+    WHERE students_register_event.id_eve = ${req.params.id}`;
+    console.log(sql);
+    conn.query(sql, function(err, result) {
         if (err) console.log(err);
         else {
             res.send(result);
@@ -115,10 +114,9 @@ function getInforEventAndStudentsFromDatabase(req, res) {
 
 } */
 
-function deleteStudentFromDataBase(req, res) {
+function deleteStudentRegisterEvent(req, res) {
     let sql = `DELETE FROM students_register_event WHERE students_register_event.id_stu = ${req.params.id};`;
-    sql += `DELETE FROM account WHERE account.id = ${req.params.id};`;
-    conn.query(sql, function (err, result) {
+    conn.query(sql, function(err, result) {
         if (err) console.log(err);
         else {
             let dataresult = {
@@ -164,7 +162,6 @@ module.exports.getInforEventAndStudentsFromDatabase = getInforEventAndStudentsFr
 
 //module.exports.findScoreOfStudentBydataBase = findScoreOfStudentBydataBase;
 
-module.exports.deleteStudentFromDataBase = deleteStudentFromDataBase;
+module.exports.deleteStudentRegisterEvent = deleteStudentRegisterEvent;
 
 //module.exports.confirmStudentJoinEvent = confirmStudentJoinEvent;
-

@@ -6,7 +6,7 @@ function verify(req, res, next) {
     if (token) {
         jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
             if (err) {
-                return res.status(500).json({
+                return res.status(403).json({
                     message: "token is invalid"
                 })
             } else {

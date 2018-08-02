@@ -1,22 +1,20 @@
 const mysql = require('mysql');
 
 const conn = mysql.createConnection({
-    host     : 'localhost',
-    user     : 'root',
-    password : '',
-    database : 'qldv1'
+    host: 'localhost',
+    user: 'root',
+    password: '865121',
+    database: 'qldv'
 });
 
 conn.connect(function(err) {
     // in case of error
-    if(err){
+    if (err) {
         console.log(err.code);
         console.log(err.fatal);
-    }
-    else {
+    } else {
         console.log('connected!');
     }
 });
 
 module.exports = conn;
-

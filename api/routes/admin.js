@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const adminController = require('../../controller/admincontroller')
 const bodyParser = require('body-parser');
+const verifyPrivilege = require('../../model/verifyPrivileges');
 
 //find student By Id sv from data base
 router.get('/find_by_id/:id', adminController.findStudentByIdFromDataBase);
@@ -22,7 +23,7 @@ router.get('/get_infor_event_and_students/:id', adminController.getInforEventAnd
 
 //router.post('/add_score_to_student', adminController.addScoreToStudent);
 
-router.delete('/delete_student/:id', adminController.deleteStudentFromDataBase); 
+router.delete('/delete_student_register_event/:id', verifyPrivilege('delete_data'), adminController.deleteStudentRegisterEvent);
 
 //router.post('/confirm_student_join_event', adminController.confirmStudentJoinEvent);
 

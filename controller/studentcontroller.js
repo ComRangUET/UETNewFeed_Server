@@ -1,8 +1,8 @@
 const conn = require('../config');
 
 function getInformation(req, res) {
-    let sql = `SELECT * from account WHERE account.MSSV = ${req.params.masv}`;
-    conn.query(sql, function (err, result) {
+    let sql = `SELECT * from account WHERE account.id = ${req.tokenData.idaccount}`;
+    conn.query(sql, function(err, result) {
         if (err) console.log(err);
         else {
             res.json({
@@ -16,7 +16,7 @@ function getInformation(req, res) {
 function changeEmailAndNumber(req, res) {
     var sql = `UPDATE account SET  email = "${req.body.email}", phone_numbers = "${req.body.phone_numbers}", class = "${req.body.class}", faculty = "${req.body.faculty}",
     course = "${req.body.course}", full_name = "${req.body.full_name}" WHERE MSSV = ${req.body.mssv} `;
-    conn.query(sql, function (err, result) {
+    conn.query(sql, function(err, result) {
         if (err) console.log(err);
         else {
             data = {
@@ -30,7 +30,7 @@ function changeEmailAndNumber(req, res) {
 
 function studentJoinEvent(req, res) {
     let sql = `INSERT INTO students_register_event(id_stu, id_eve) value(${req.body.id_sv}, ${req.body.id_event})`;
-    conn.query(sql, function (err, result) {
+    conn.query(sql, function(err, result) {
         if (err) console.log(err);
         else {
             let dataresult = {

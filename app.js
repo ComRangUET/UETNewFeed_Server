@@ -21,8 +21,8 @@ app.use(bodyParser.json());
 app.use('/api/admin/event', eventRouter);
 app.use('/api/news', news);
 app.use('/api/admin', admin);
-app.use('/api/', account);
-app.use('/api/student', student);
+app.use('/api', account);
+app.use('/api/v1', student);
 /* app.use('/', function(req, res){
     res.send('Welcome to home page');
 }) */
@@ -36,7 +36,7 @@ app.use((req, res, next) => {
 })
 
 app.use((error, req, res, next) => {
-    res.status(error.status || 500);
+    res.status(error.status || 403);
     res.json({
         error: {
             message: error.message

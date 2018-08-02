@@ -12,12 +12,13 @@ function verifyPrivileges(privilege) {
                 con.query(sql, (err, rows) => {
                     if (err) throw err;
                     if (rows.length > 0) {
-                        req.hasPrivilege = true;
                         req.tokenData = decoded;
                         next();
                     } else {
-                        req.hasPrivilege = false;
-                        next();
+                        res.status(403).json({
+                            success: false,
+                            message: "tài khoản của bạn không có quyền truy cập vào chức năng này"
+                        })
                     }
                 });
             })
