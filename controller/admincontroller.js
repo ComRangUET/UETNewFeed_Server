@@ -6,7 +6,6 @@ function findStudentByIdFromDataBase(req, res) {
 
     conn.query(sql, function(err, result) {
         if (err) {
-
             res.send(err);
         } else {
             res.send(result);
@@ -19,7 +18,6 @@ function findStudentByMSSVFromDataBase(req, res) {
 
     conn.query(sql, function(err, result) {
         if (err) {
-
             res.send(err);
         } else {
             res.send(result);
@@ -69,8 +67,12 @@ function addStudentToDataBase(req, res) {
 function selectAllStudentsFromDataBase(req, res) {
     let sql = 'SELECT * FROM account ';
     conn.query(sql, function(err, result) {
-        if (err) console.log(err);
-        else {
+        if (err) {
+            res.status(403).json({
+                success: false,
+                message: err.message
+            });
+        } else {
             res.send(result);
         }
     })
@@ -81,10 +83,14 @@ function getInforEventAndStudentsFromDatabase(req, res) {
     INNER JOIN  account  ON account.id = students_register_event.id_stu 
     INNER JOIN event ON event.id_eve = students_register_event.id_eve 
     WHERE students_register_event.id_eve = ${req.params.id}`;
-    console.log(sql);
+
     conn.query(sql, function(err, result) {
-        if (err) console.log(err);
-        else {
+        if (err) {
+            res.status(403).json({
+                success: false,
+                message: err.message
+            });
+        } else {
             res.send(result);
         }
     })
@@ -117,8 +123,12 @@ function getInforEventAndStudentsFromDatabase(req, res) {
 function deleteStudentRegisterEvent(req, res) {
     let sql = `DELETE FROM students_register_event WHERE students_register_event.id_stu = ${req.params.id};`;
     conn.query(sql, function(err, result) {
-        if (err) console.log(err);
-        else {
+        if (err) {
+            res.status(403).json({
+                success: false,
+                message: err.message
+            });
+        } else {
             let dataresult = {
                 success: true,
                 data: "DELETE done"

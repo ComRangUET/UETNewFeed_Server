@@ -1,23 +1,31 @@
 const conn = require('../config');
 
 function getInformation(req, res) {
-    let sql = `SELECT * from account WHERE account.id = ${req.tokenData.idaccount}`;
-    conn.query(sql, function(err, result) {
-        if (err) console.log(err);
-        else {
+    let sql = `SELECT * from account WHERE accout.id = ${req.tokenData.idaccount}`;
+    conn.query(sql, function(err, rows) {
+        if (err) {
+            res.status(403).json({
+                success: false,
+                message: err.message
+            });
+        } else {
             res.json({
                 success: true,
-                data: result
+                data: rows[0]
             })
         }
     })
 }
 
 function changeEmailAndNumber(req, res) {
-    const sql = `UPDATE account SET  email = "${req.body.email}", phonenumber = "${req.body.phonenumber} WHERE MSSV = ${req.tokenData.idaccount} `;
+    const sql = `UPDATE account SET  email = "${req.body.email}", phonenumber = "${req.body.phonenumber}" WHERE id = ${req.tokenData.idaccount} `;
     conn.query(sql, function(err, result) {
-        if (err) console.log(err);
-        else {
+        if (err) {
+            res.status(403).json({
+                success: false,
+                message: err.message
+            });
+        } else {
             data = {
                 success: true,
                 message: "Updated"
@@ -28,10 +36,15 @@ function changeEmailAndNumber(req, res) {
 }
 
 function studentJoinEvent(req, res) {
-    let sql = `INSERT INTO students_register_event(id_stu, id_eve) value(${req.body.id_sv}, ${req.body.id_event})`;
+    let sql = `INSERT INTO students_register_event(id_stu, id_eve, default_student) value(${req.tokenData.idaccount}, ${req.params.id_event}, 0)`;
+
     conn.query(sql, function(err, result) {
-        if (err) console.log(err);
-        else {
+        if (err) {
+            res.status(403).json({
+                success: false,
+                message: err.message
+            });
+        } else {
             let dataresult = {
                 success: true,
                 data: "Register join done"

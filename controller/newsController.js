@@ -1,7 +1,7 @@
 const conn = require('../config');
 
 function getNewsList(req, res) {
-    const sql = 'SELECT * FROM news';
+    const sql = `SELECT * FROM news ORDER BY idnews DESC LIMIT ${req.params.index}, 8`;
     try {
         conn.query(sql, (err, rows, fields) => {
             if (!err) {
@@ -11,27 +11,36 @@ function getNewsList(req, res) {
             }
         });
     } catch (error) {
-        throw error;
+        res.status(403).json({
+            success: false,
+            message: err.message
+        });
     }
 }
 
-function getNew(req, res){
-    const sql = `SELECT id_news, news_reference.header, content, introduce_news, image  FROM news_reference inner join news on news_reference.id_news = news.idnews WHERE news_reference.id_news= ${req.params.id_news}`;
-    try{
-        conn.query(sql, function(err, result){
-            if(!err)   
+function getContentNews(req, res) {
+    const sql = `SELECT header, content FROM news WHERE id_news = ${req.params.id_news}`;
+    try {
+        conn.query(sql, function(err, rows) {
+            if (!err)
                 res.json({
                     success: true,
-                    data: result
+                    data: rows[0]
                 })
-            else throw err;
+            else {
+                res.status(403).json({
+                    success: false,
+                    message: err.message
+                });
+            }
         });
-    }
-    catch(error)
-    {
-        throw error;
+    } catch (error) {
+        res.status(403).json({
+            success: false,
+            message: err.message
+        });
     }
 }
 
 module.exports.getNewsList = getNewsList;
-module.exports.getNew = getNew;
+module.exports.getContentNews = getContentNews;

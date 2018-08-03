@@ -8,18 +8,23 @@ exports.postPageToDatabase = function(url, refer, img) {
             const $ = cheerio.load(body);
             const title = $('#content article h2').text();
             const content = $('#content article div.single-post-content-text.content-pad').html();
-            const sql = 'INSERT INTO news (header,introduce_news,image) VALUES (?,?,?)';
-            const values = [title, refer, img];
-            conn.query(sql, values, (err, result) => {
-                if (err) throw err;
-                console.log('push refer success');
+            const sql = 'INSERT INTO news (header,introduce_news,content,image) VALUES (?,?,?,?)';
+            const values = [title, refer, content, img];
+            conn.query(sql, values, (err, rows) => {
+                if (err) {
+                    res.status(403).json({
+                        success: false,
+                        message: err.message
+                    });
+                }
+                console.log('push success');
             });
-            conn.query('INSERT INTO news_reference(header,content) VALUES(?,?)', [title, content], (err, result) => {
-                if (err) throw err;
-                console.log('push content success');
-            })
+
         } else {
-            console.log(err);
+            res.status(403).json({
+                success: false,
+                message: err.message
+            });
         }
     });
 }

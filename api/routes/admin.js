@@ -2,7 +2,10 @@ const express = require('express');
 const router = express.Router();
 const adminController = require('../../controller/admincontroller')
 const bodyParser = require('body-parser');
-const verifyPrivilege = require('../../model/verifyPrivileges');
+const verifyPrivilege = require('../../middleware/verifyPrivileges');
+const verifyToken = require('../../middleware/verify-token');
+
+router.use(verifyToken.verifyToken);
 
 //find student By Id sv from data base
 router.get('/find_by_id/:id', adminController.findStudentByIdFromDataBase);
@@ -17,7 +20,7 @@ router.post('/add_student_to_database', adminController.addStudentToDataBase);
 
 router.get('/select_all_students', adminController.selectAllStudentsFromDataBase);
 
-router.get('/get_infor_event_and_students/:id', adminController.getInforEventAndStudentsFromDatabase);
+router.get('/get_infor_event_and_students/:id', verifyPrivilege('delete_data'), adminController.getInforEventAndStudentsFromDatabase);
 
 //router.get('/find_score_of_student/:id', adminController.findScoreOfStudentBydataBase);
 

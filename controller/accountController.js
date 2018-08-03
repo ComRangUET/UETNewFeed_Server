@@ -3,8 +3,12 @@ const jwt = require('jsonwebtoken');
 
 function register(req, res) {
     con.query('SELECT * FROM account WHERE user = ?', req.body.user, (err, rows) => {
-        if (err) throw err;
-        if (rows.length === 0) {
+        if (err) {
+            res.status(403).json({
+                success: false,
+                message: err.message
+            });
+        } else if (rows.length === 0) {
             con.query('INSERT INTO account(id,user,password) VALUES (?,?,?)', [req.body.id, req.body.user, req.body.password], (err, result, feilds) => {
                 if (!err) {
                     console.log('success');
@@ -12,7 +16,10 @@ function register(req, res) {
                         success: true
                     });
                 } else {
-                    console.log(err);
+                    res.status(403).json({
+                        success: false,
+                        message: err.message
+                    });
                 }
             });
         } else {
@@ -34,15 +41,15 @@ function login(req, res) {
     }
     con.query('SELECT * FROM account WHERE user = ?', [user], (err, rows, fields) => {
         if (err) {
-            res.status(400).json({
-                "message": "Error Occured"
-            })
-            console.log(err);
+            res.status(403).json({
+                success: false,
+                message: err.message
+            });
         } else {
             if (rows.length > 0) {
                 console.log(rows[0]);
                 if (rows[0].password == password) {
-                    const token = jwt.sign({ idaccount: rows[0].id, role: rows[0].role_id }, process.env.SECRET_KEY, {
+                    const token = jwt.sign({ idaccount: rows[0].id }, process.env.SECRET_KEY, {
                         expiresIn: 500000000
                     })
                     res.status(200).json({
