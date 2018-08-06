@@ -1,13 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
-
-
 const adminController = require('../../controller/admincontroller')
 const verifyPrivilege = require('../../middleware/verifyPrivileges');
 const verifyToken = require('../../middleware/verify-token');
 
-//router.use(verifyToken.verifyToken);
+router.use(verifyToken.verifyToken);
 
 router.get('/work_with_students', adminController.getStudents);
 

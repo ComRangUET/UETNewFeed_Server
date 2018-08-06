@@ -1,14 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
-
-
 const eventController = require('../../controller/eventController');
 const verifyPrivileges = require('../../middleware/verifyPrivileges');
 const verifyToken = require('../../middleware/verify-token');
 
 
-//router.use(verifyToken.verifyToken);
+router.use(verifyToken.verifyToken);
 
 router.get('/work_with_event/:id_eve', eventController.getEvent);
 
