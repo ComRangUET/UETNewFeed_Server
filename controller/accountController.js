@@ -1,15 +1,15 @@
-const con = require('../config');
+const conn = require('../config');
 const jwt = require('jsonwebtoken');
 
 function register(req, res) {
-    con.query('SELECT * FROM account WHERE user = ?', req.body.user, (err, rows) => {
+    conn.conn.query('SELECT * FROM account WHERE user = ?', req.body.user, (err, rows) => {
         if (err) {
             res.status(403).json({
                 success: false,
                 message: err.message
             });
         } else if (rows.length === 0) {
-            con.query('INSERT INTO account(id,user,password) VALUES (?,?,?)', [req.body.id, req.body.user, req.body.password], (err, result, feilds) => {
+            conn.conn.query('INSERT INTO account(id,user,password) VALUES (?,?,?)', [req.body.id, req.body.user, req.body.password], (err, result, feilds) => {
                 if (!err) {
                     console.log('success');
                     res.status(201).json({
@@ -39,7 +39,7 @@ function login(req, res) {
             message: "Bạn không được để trống"
         });
     }
-    con.query('SELECT * FROM account WHERE user = ?', [user], (err, rows, fields) => {
+    conn.conn.query('SELECT * FROM account WHERE user = ?', [user], (err, rows, fields) => {
         if (err) {
             res.status(403).json({
                 success: false,

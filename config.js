@@ -14,7 +14,7 @@ const Sequelize = require('sequelize');
     },
 }); 
 
-/* const conn = mysql.createConnection({
+const conn = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: '',
@@ -28,7 +28,7 @@ const Sequelize = require('sequelize');
     } else {
         console.log('connected!');
     }
-});  */
+}); 
 
 
 
@@ -165,5 +165,5 @@ module.exports = {
     account,
     register,
     event,
-    news
+    news, conn
 };
