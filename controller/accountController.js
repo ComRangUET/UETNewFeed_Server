@@ -1,5 +1,6 @@
 const conn = require('../config');
 const jwt = require('jsonwebtoken');
+const table = require('../config');
 
 function register(req, res) {
     conn.conn.query('SELECT * FROM account WHERE user = ?', req.body.user, (err, rows) => {
@@ -31,46 +32,47 @@ function register(req, res) {
 
 }
 
-function login(req, res) {
+async function login(req, res) {
     const user = req.body.user;
     const password = req.body.password;
-    if (user == '' || password == '') {
+    if (user == undefined || password == undefined) {
         return res.json({
             message: "Bạn không được để trống"
         });
     }
-    conn.conn.query('SELECT * FROM account WHERE user = ?', [user], (err, rows, fields) => {
-        if (err) {
-            res.status(403).json({
-                success: false,
-                message: err.message
-            });
-        } else {
-            if (rows.length > 0) {
-                console.log(rows[0]);
-                if (rows[0].password == password) {
-                    const token = jwt.sign({ idaccount: rows[0].id }, process.env.SECRET_KEY, {
-                        expiresIn: 500000000
-                    })
-                    res.status(200).json({
-                        success: true,
-                        accessToken: token
-                    });
-                } else {
-                    console.log('false');
-                    res.json({
-                        success: false,
-                        message: 'Tài khoản hoặc mật khẩu không chính xác'
-                    });
+
+    try {
+        await table.account.findOne({
+                where: {
+                    user: user,
+                    password: password
                 }
-            } else {
+            })
+            .then((result) => {
+                const token = jwt.sign({ idaccount: result.dataValues.id }, process.env.SECRET_KEY, {
+                    expiresIn: 5000000
+                });
+                res.json({
+                    success: true,
+                    data: null,
+                    token: token
+                });
+            })
+            .catch(err => {
                 res.json({
                     success: false,
-                    message: "Tài khoản hoặc mật khâủ không chính xác"
-                });
-            }
-        }
-    })
+                    data: null,
+                    message: "Tài khoản hoặc mật khẩu của bạn nhập không chính xác",
+                    reason: err.message
+                })
+            })
+    } catch (err) {
+        res.json({
+            success: false,
+            data: null,
+            reason: err.message
+        });
+    }
 }
 
 module.exports.register = register;

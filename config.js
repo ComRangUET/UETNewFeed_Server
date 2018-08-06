@@ -1,7 +1,7 @@
 const mysql = require('mysql');
 const Sequelize = require('sequelize');
 
- const con = new Sequelize('qldv', 'root', '', {
+const con = new Sequelize('qldv', 'root', '865121', {
     host: 'localhost',
     dialect: 'mysql',
     operatorsAliases: false,
@@ -12,23 +12,23 @@ const Sequelize = require('sequelize');
         acquire: 30000,
         idle: 10000
     },
-}); 
+});
 
 const conn = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '',
+    password: '865121',
     database: 'qldv'
 });
 
- conn.connect(function(err) {
+conn.connect(function(err) {
     if (err) {
         console.log(err.code);
         console.log(err.fatal);
     } else {
         console.log('connected!');
     }
-}); 
+});
 
 
 
@@ -73,11 +73,10 @@ const account = con.define('account', {
         type: Sequelize.STRING,
         allowNull: false
     }
-},
-    {
-        timestamps: false,
-        freezeTableName: true
-    });
+}, {
+    timestamps: false,
+    freezeTableName: true
+});
 
 const event = con.define('event', {
     id_eve: {
@@ -100,11 +99,10 @@ const event = con.define('event', {
     time_start: {
         type: Sequelize.DATE
     }
-},
-    {
-        timestamps: false,
-        freezeTableName: true
-    })
+}, {
+    timestamps: false,
+    freezeTableName: true
+})
 
 const news = con.define('news', {
     id_news: {
@@ -124,11 +122,10 @@ const news = con.define('news', {
     image: {
         type: Sequelize.STRING
     }
-},
-    {
-        timestamps: false,
-        freezeTableName: true
-    })
+}, {
+    timestamps: false,
+    freezeTableName: true
+})
 
 const register = con.define('students_register_event', {
     id_eve: {
@@ -142,21 +139,20 @@ const register = con.define('students_register_event', {
         allowNull: false,
         defaultValue: 0
     }
-},
-    {
-        timestamps: false,
-        freezeTableName: true
-    })
-register.belongsTo(account, { foreignKey: 'id_stu'});
-register.belongsTo(event, {foreignKey: 'id_eve'})
-//module.exports = conn;
+}, {
+    timestamps: false,
+    freezeTableName: true
+})
+register.belongsTo(account, { foreignKey: 'id_stu' });
+register.belongsTo(event, { foreignKey: 'id_eve' })
+    //module.exports = conn;
 
 con
     .authenticate()
-    .then(function () {
+    .then(function() {
         console.log('Connected!');
     })
-    .catch(function (err) {
+    .catch(function(err) {
         console.log(err);
     })
 
@@ -165,5 +161,6 @@ module.exports = {
     account,
     register,
     event,
-    news, conn
+    news,
+    conn
 };
