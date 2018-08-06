@@ -1,7 +1,7 @@
 const mysql = require('mysql');
 const Sequelize = require('sequelize');
 
-const con = new Sequelize('qldv', 'root', '', {
+ const con = new Sequelize('qldv', 'root', '', {
     host: 'localhost',
     dialect: 'mysql',
     operatorsAliases: false,
@@ -12,24 +12,23 @@ const con = new Sequelize('qldv', 'root', '', {
         acquire: 30000,
         idle: 10000
     },
-});
+}); 
 
 /* const conn = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: '',
-    database: 'qldv1'
+    database: 'qldv'
 });
 
-conn.connect(function(err) {
-    // in case of error
+ conn.connect(function(err) {
     if (err) {
         console.log(err.code);
         console.log(err.fatal);
     } else {
         console.log('connected!');
     }
-}); */
+});  */
 
 
 

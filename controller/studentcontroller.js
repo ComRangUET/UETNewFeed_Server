@@ -1,7 +1,5 @@
 const table = require('../config');
 
-
-
 function getStudent(req, res) {
     try {
         table.account.findOne({
@@ -12,6 +10,7 @@ function getStudent(req, res) {
             return res.json({
                 success: true,
                 data: result.dataValues
+
             })
         })
     }
@@ -96,7 +95,6 @@ function studentRegisterEvent(req, res) {
         })
     }
 }
-
 
 module.exports = {
     getStudent, 

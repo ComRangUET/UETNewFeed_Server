@@ -1,12 +1,22 @@
+const sequelize = require('sequelize');
+
+
 const table = require('../config');
 
-
-
 function getNewsList(req, res) {
-
+    const { index } = req.params;
     try {
         let listNews = [];
-        table.news.findAll().then(function (result) {
+        table.news.findAll({
+            attributes: ['id_news', 'header', 'introduce_news', 'image']
+        },
+            {
+            order: [
+                ['id_news', 'DESC']
+            ],
+            offset: 3 * index,
+            limit: 3
+        }).then(function (result) {
             result.forEach(function (i) {
                 listNews.push(i.dataValues);
             })
@@ -30,8 +40,10 @@ function getNewsList(req, res) {
 function getNews(req, res) {
 
     try {
-        let listNews = [];
         table.news.findOne({
+            attributes: ['header', 'content', 'image']
+        },
+            {
             where: {
                 id_news: req.params.id_news
             }
@@ -52,5 +64,8 @@ function getNews(req, res) {
     }
 }
 
-module.exports.getNewsList = getNewsList;
-module.exports.getNews = getNews;
+module.exports = {
+    getNews,
+    getNewsList
+}
+

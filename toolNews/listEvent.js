@@ -8,7 +8,7 @@ module.exports = function scanAndUpNews() {
     request(url, (err, Response, body) => {
         let idFile = fs.readFileSync(__dirname + '/text.txt', 'utf8');
         const $ = cheerio.load(body);
-
+        // for (let index = 7; index >= 0; index--) {
         const classNameList1 = $('#content div.blog-listing').children().eq(0).attr('class');
         let id = '';
         for (let i = 16; i <= 20; i++) {
@@ -19,15 +19,27 @@ module.exports = function scanAndUpNews() {
             console.log(true);
             const srcImage = $('#content div.blog-listing').children().eq(0).children().eq(0).children().eq(0).children().eq(0).children().eq(0).children().eq(0).children().eq(0).children().eq(0).attr('src');
             const urlScrapePage = $('#content div.blog-listing ').children().eq(0).children().eq(0).children().eq(0).children().eq(0).children().eq(0).children().eq(0).children().eq(0).attr('href');
-            const referrence = $('#content div.blog-listing').children().eq(0).children().eq(0).children().eq(1).children().eq(0).children().eq(0).children().eq(1).text();
+            let referrence = $('#content div.blog-listing').children().eq(0).children().eq(0).children().eq(1).children().eq(0).children().eq(0).children().eq(1).text();
+
+            for (let i = 0; i < referrence.length; i++) {
+                if (referrence.charCodeAt(i) != 160 && referrence.charCodeAt(i) != 32) {
+                    referrence = referrence.substr(i, referrence.length);
+                    break;
+                }
+            }
+
             scrapeEvent.postPageToDatabase(urlScrapePage, referrence, srcImage);
             fs.writeFile(__dirname + '/text.txt', id, 'utf8', (err) => {
                 if (err) {
-                    console.log(err);
+                    res.status(403).json({
+                        success: false,
+                        message: err.message
+                    });
                 }
             })
         } else {
             return;
         }
+        // }
     });
 }

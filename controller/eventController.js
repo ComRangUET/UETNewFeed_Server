@@ -1,10 +1,18 @@
 const table = require('../config');
 
 function getEvents(req, res) {
-
+    const {index} = req.params;
     try {
         let listEvent = [];
-        table.event.findAll().then(function (result) {
+        table.event.findAll({
+            attributes: ['id_eve','header', 'image', 'place', 'time_start']
+        },{
+            order: [
+                ['id_eve','DESC']
+            ],
+            offset:3*index,
+            limit: 3
+        }).then(function (result) {
             result.forEach(function (i) {
                 listEvent.push(i.dataValues);
             })
@@ -29,7 +37,7 @@ function getEvents(req, res) {
 function getEvent(req, res) {
 
     try {
-        table.event.findAll({
+        table.event.findOne({
             where: {
                 id_eve: req.params.id_eve
             }
@@ -40,7 +48,6 @@ function getEvent(req, res) {
             })
         })
     }
-
     catch (err) {
         console.log('error', err);
         res.json({
@@ -127,10 +134,9 @@ function deleteEvents(req, res) {
             success: false,
             data: null,
             reason: err.message
-        });
+        })
     }
 }
-
 
 function postStudents(req, res) {
     const { header, content, image, place, time_start } = req.body;

@@ -1,21 +1,4 @@
-//const conn = require('../config');
 const table = require('../config');
-
-
-function deleteStudentRegisterEvent(req, res) {
-    let sql = `DELETE FROM students_register_event WHERE students_register_event.id_stu = ${req.params.id};`;
-    conn.query(sql, function (err, result) {
-        if (err) console.log(err);
-        else {
-            let dataresult = {
-                success: true,
-                data: "DELETE done"
-            }
-            return res.send(dataresult);
-        }
-    })
-}
-
 
 async function getStudents(req, res) {
     const { major, course, role_id } = req.query;
@@ -34,7 +17,7 @@ async function getStudents(req, res) {
         }
         if (major) {
             listSv = listSv.filter(function (sv) {
-                return sv.major === major;
+                return sv.major == major;
             })
         }
         if (role_id) {
@@ -93,6 +76,24 @@ async function getStudent(req, res) {
             reason: err.message
         })
     }
+}
+
+function deleteStudentRegisterEvent(req, res) {
+    let sql = `DELETE FROM students_register_event WHERE students_register_event.id_stu = ${req.params.id};`;
+    conn.query(sql, function(err, result) {
+        if (err) {
+            res.status(403).json({
+                success: false,
+                message: err.message
+            });
+        } else {
+            let dataresult = {
+                success: true,
+                data: "DELETE done"
+            }
+            return res.send(dataresult);
+        }
+    })
 }
 
 async function putStudents(req, res) {
@@ -216,16 +217,11 @@ function postStudents(req, res) {
 
 
 
-
-
-
 module.exports = {
     getStudents,
     getStudent,
     putStudents,
     deleteStudents,
     postStudents,
+    deleteStudentRegisterEvent
 }
-
-module.exports.deleteStudentRegisterEvent = deleteStudentRegisterEvent;
-
