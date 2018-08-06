@@ -1,122 +1,10 @@
-const conn = require('../config');
+//const conn = require('../config');
+const table = require('../config');
 
-
-function findStudentByIdFromDataBase(req, res) {
-    let sql = `SELECT * FROM account WHERE id = ${req.params.id}`;
-
-    conn.query(sql, function(err, result) {
-        if (err) {
-
-            res.send(err);
-        } else {
-            res.send(result);
-        }
-    })
-}
-
-function findStudentByMSSVFromDataBase(req, res) {
-    let sql = `SELECT * FROM account WHERE MSSV = ${req.params.masv}`;
-
-    conn.query(sql, function(err, result) {
-        if (err) {
-
-            res.send(err);
-        } else {
-            res.send(result);
-        }
-    })
-}
-
-/* function findStudentsByClassFromDatabase(req, res){
-    let sql = `SELECT * FROM student WHERE lop = '${req.params.class}' `;
-    conn.query(sql, function(err, result){
-        if(err) console.log(err);
-        else{
-            res.send(result);
-        }
-    })
-} */
-
-/* function findStudentsByYearFromDatabase(req, res){
-    let sql = `SELECT * FROM student WHERE namhoc = '${req.params.Year}' `;
-    conn.query(sql, function(err, result){
-        if(err) console.log(err);
-        else{
-            res.send(result);
-        }
-    })
-} */
-
-function addStudentToDataBase(req, res) {
-    let sql = `INSERT INTO account SET ?`;
-    let person = {
-        user: req.body.user,
-        password: req.body.password,
-        MSSV: req.body.masv
-    };
-    conn.query(sql, person, function(err, result) {
-        if (err) console.log(err);
-        else {
-            res.send({
-                success: true,
-                message: "add done"
-            });
-        }
-    })
-}
-
-
-function selectAllStudentsFromDataBase(req, res) {
-    let sql = 'SELECT * FROM account ';
-    conn.query(sql, function(err, result) {
-        if (err) console.log(err);
-        else {
-            res.send(result);
-        }
-    })
-}
-
-function getInforEventAndStudentsFromDatabase(req, res) {
-    let sql = `SELECT * FROM students_register_event 
-    INNER JOIN  account  ON account.id = students_register_event.id_stu 
-    INNER JOIN event ON event.id_eve = students_register_event.id_eve 
-    WHERE students_register_event.id_eve = ${req.params.id}`;
-    console.log(sql);
-    conn.query(sql, function(err, result) {
-        if (err) console.log(err);
-        else {
-            res.send(result);
-        }
-    })
-}
-
-/* function findScoreOfStudentBydataBase(req, res){
-    let sql = `SELECT * FROM student inner join diemchuyencan on student.sv_id = diemchuyencan.id WHERE student.sv_id = ${req.params.id}`;
-    conn.query(sql, function(err, result){
-        if(err) console.log(err);
-        else{
-            res.send(result);
-        }
-    })
-} */
-
-/* function addScoreToStudent(req, res) {
-    let sql = `INSERT INTO activepoint SET  activepoint.id_stu = ${req.body.id}, activepoint.id_eve = ${req.body.id_eve}, activepoint.scores = ${req.body.scores}`;
-    conn.query(sql, function (err, result) {
-        if (err) console.log(err);
-        else {
-           res.json({
-               success: true,
-               message: "add score done"
-           })
-        }
-    })
-
-} */
 
 function deleteStudentRegisterEvent(req, res) {
     let sql = `DELETE FROM students_register_event WHERE students_register_event.id_stu = ${req.params.id};`;
-    conn.query(sql, function(err, result) {
+    conn.query(sql, function (err, result) {
         if (err) console.log(err);
         else {
             let dataresult = {
@@ -129,39 +17,215 @@ function deleteStudentRegisterEvent(req, res) {
 }
 
 
+async function getStudents(req, res) {
+    const { major, course, role_id } = req.query;
 
-/* function confirmStudentJoinEvent(req, res){
-    let sql = `UPDATE student_join_event SET joined = '1' WHERE student_join_event.id_stu = ${req.body.id_sv} AND student_join_event.id_eve = ${req.body.id_event}`;
-    conn.query(sql, function(err, result){
-        if(err) console.log(err);
-        else{
-            let dataresult = {
-                success: true,
-                data: "Confirm done"
-            }
-            res.send(dataresult);
+    try {
+        let listSv = [];
+        await table.account.findAll().then(function (result) {
+            result.forEach(function (i) {
+                listSv.push(i.dataValues);
+            })
+        })
+        if (course) {
+            listSv = listSv.filter(function (sv) {
+                return sv.course == course;
+            })
         }
-    })
-} */
+        if (major) {
+            listSv = listSv.filter(function (sv) {
+                return sv.major === major;
+            })
+        }
+        if (role_id) {
+            listSv = listSv.filter(function (sv) {
+                return sv.role_id == role_id;
+            })
+        }
+        res.json({
+            success: true,
+            data: listSv
+        });
+    }
+    catch (err) {
+        console.log('error', err);
+        return res.json({
+            success: false,
+            data: null,
+            reason: err.message
+        });
+    }
+}
 
-module.exports.findStudentByIdFromDataBase = findStudentByIdFromDataBase;
+async function getStudent(req, res) {
+    const { id, MSSV } = req.query;
 
-module.exports.findStudentByMSSVFromDataBase = findStudentByMSSVFromDataBase;
+    try {
+        let listSv = [];
+        await table.account.findAll().then(function (result) {
+            result.forEach(function (i) {
+                listSv.push(i.dataValues);
+            })
+        });
 
-//module.exports.findStudentsByClassFromDatabase = findStudentsByClassFromDatabase;
+        if (id) {
+            listSv = listSv.filter(function (sv) {
+                return sv.id == id;
+            })
+        }
 
-module.exports.addStudentToDataBase = addStudentToDataBase;
+        if (MSSV) {
+            listSv = listSv.filter(function (sv) {
+                return sv.MSSV == MSSV;
+            })
+        }
 
-//module.exports.findStudentsByYearFromDatabase = findStudentsByYearFromDatabase;
+        res.json({
+            success: true,
+            data: listSv
+        })
+    }
+    catch (err) {
+        console.log('error', err);
+        res.json({
+            success: false,
+            data: null,
+            reason: err.message
+        })
+    }
+}
 
-module.exports.selectAllStudentsFromDataBase = selectAllStudentsFromDataBase;
+async function putStudents(req, res) {
+    const { email, major, faculty, course, phonenumber } = req.body;
 
-module.exports.getInforEventAndStudentsFromDatabase = getInforEventAndStudentsFromDatabase;
+    try {
+        await table.account.update({
+            email: email,
+            major: major,
+            faculty: faculty,
+            phonenumber: phonenumber,
+            course: course
+        },
+            {
+                where: {
+                    id: req.params.id
+                }
+            })
+            .then(async function () {
+                await table.account.findOne({
+                    where: {
+                        id: req.params.id
+                    }
+                })
+                    .then(function (result) {
+                        return res.json({
+                            success: true,
+                            data: result.dataValues
+                        })
+                    })
+            })
+    }
+    catch (err) {
+        console.log('error', err);
+        res.json({
+            success: false,
+            data: null,
+            reason: err.message
+        })
+    }
+}
 
-//module.exports.addScoreToStudent = addScoreToStudent;
+function deleteStudents(req, res) {
+    try {
+        table.register.destroy({
+            where: {
+                id: req.params.id
+            }
+        });
 
-//module.exports.findScoreOfStudentBydataBase = findScoreOfStudentBydataBase;
+        table.account.destroy({
+            where: {
+                id: req.params.id
+            }
+        })
+            .then(function () {
+                let listSv = [];
+                table.account.findAll().then(function (result) {
+                    result.forEach(function (i) {
+                        listSv.push(i.dataValues);
+                    })
+                })
+                    .then(function () {
+                        return res.json({
+                            success: true,
+                            data: listSv
+                        })
+                    })
+            })
+
+    }
+    catch (err) {
+        console.log('error', err);
+        return res.json({
+            success: false,
+            data: null,
+            reason: err.message
+        });
+    }
+}
+
+
+function postStudents(req, res) {
+    const { role_id, user, MSSV, fullname, password } = req.body;
+
+    try {
+        if (!role_id || !user || !MSSV || !fullname || !password) throw new Error('role_id, user, MSSV are not require');
+
+        table.account.create({
+            role_id: role_id,
+            user: user,
+            MSSV: MSSV,
+            fullname: fullname,
+            password: password
+        })
+            .then(function () {
+                let listSv = [];
+                table.account.findAll().then(function (result) {
+                    result.forEach(function (i) {
+                        listSv.push(i.dataValues);
+                    })
+                })
+                    .then(function () {
+                        res.json({
+                            success: true,
+                            data: listSv
+                        })
+                    })
+            })
+
+    }
+    catch (err) {
+        console.log('error', err);
+        res.json({
+            success: false,
+            data: null,
+            reason: err.message
+        })
+    }
+}
+
+
+
+
+
+
+module.exports = {
+    getStudents,
+    getStudent,
+    putStudents,
+    deleteStudents,
+    postStudents,
+}
 
 module.exports.deleteStudentRegisterEvent = deleteStudentRegisterEvent;
 
-//module.exports.confirmStudentJoinEvent = confirmStudentJoinEvent;

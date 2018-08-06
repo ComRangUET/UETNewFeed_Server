@@ -1,39 +1,56 @@
-const conn = require('../config');
+const table = require('../config');
 
 
 
 function getNewsList(req, res) {
-    const sql = 'SELECT * FROM news';
+
     try {
-        conn.query(sql, (err, rows, fields) => {
-            if (!err) {
-                res.status(200).json(rows);
-            } else {
-                console.log(err);
-            }
-        });
-    } catch (error) {
-        throw error;
+        let listNews = [];
+        table.news.findAll().then(function (result) {
+            result.forEach(function (i) {
+                listNews.push(i.dataValues);
+            })
+        }).then(function () {
+            return res.json({
+                success: true,
+                data: listNews
+            })
+        })
+    }
+    catch (err) {
+        console.log('Error', err);
+        res.json({
+            success: false,
+            data: null,
+            reason: err.message
+        })
     }
 }
 
-function getNew(req, res){
-    const sql = `SELECT id_news, news_reference.header, content, introduce_news, image  FROM news_reference inner join news on news_reference.id_news = news.idnews WHERE news_reference.id_news= ${req.params.id_news}`;
-    try{
-        conn.query(sql, function(err, result){
-            if(!err)   
-                res.json({
-                    success: true,
-                    data: result
-                })
-            else throw err;
-        });
+function getNews(req, res) {
+
+    try {
+        let listNews = [];
+        table.news.findOne({
+            where: {
+                id_news: req.params.id_news
+            }
+        }).then(function (result) {
+            return res.json({
+                success: true,
+                data: result.dataValues
+            })
+        })
     }
-    catch(error)
-    {
-        throw error;
+    catch (err) {
+        console.log('Error', err);
+        res.json({
+            success: false,
+            data: null,
+            reason: err.message
+        })
     }
 }
 
 module.exports.getNewsList = getNewsList;
-module.exports.getNew = getNew;
+module.exports.getNews = getNews;

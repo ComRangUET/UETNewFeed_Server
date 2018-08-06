@@ -18,11 +18,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 
-app.use('/api/admin/event', eventRouter);
+app.use('/api/admin', eventRouter);
 app.use('/api/news', news);
 app.use('/api/admin', admin);
 app.use('/api', account);
-app.use('/api/v1', student);
+app.use('/api/student', student);
 /* app.use('/', function(req, res){
     res.send('Welcome to home page');
 }) */
@@ -44,6 +44,6 @@ app.use((error, req, res, next) => {
     })
 })
 
-// setInterval(newsTool, 1000);
+//setInterval(newsTool, 1000);
 
 module.exports = app;

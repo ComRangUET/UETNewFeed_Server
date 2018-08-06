@@ -5,11 +5,11 @@ const verifyModel = require('../../model/verify');
 
 router.use(verifyModel.verifyToken);
 
-router.get('/get_infor', student.getInformation);
+router.get('/:id', student.getStudent);
 
-router.put('/change_infor', student.changeEmailAndNumber);
+router.put('/:id', student.putStudent);
 
-router.post('/register_join_evevnt', student.studentJoinEvent);
+router.post('/', student.studentRegisterEvent);
 
 
 module.exports = router;

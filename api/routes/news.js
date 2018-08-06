@@ -6,5 +6,5 @@ const verifyPrivileges = require('../../model/verifyPrivileges');
 
 router.get('/', verifyPrivileges('nhan thong tin'), newsController.getNewsList);
 
-router.get('/getnew/:id_news', newsController.getNew);
+router.get('/getnews/:id_news', newsController.getNews);
 module.exports = router;

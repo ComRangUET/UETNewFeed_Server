@@ -1,48 +1,105 @@
-const conn = require('../config');
+const table = require('../config');
 
-function getInformation(req, res) {
-    let sql = `SELECT * from account WHERE account.id = ${req.tokenData.idaccount}`;
-    conn.query(sql, function(err, result) {
-        if (err) console.log(err);
-        else {
-            res.json({
+
+
+function getStudent(req, res) {
+    try {
+        table.account.findOne({
+            Where: {
+                id: req.params.id
+            }
+        }).then(function (result) {
+            return res.json({
                 success: true,
-                data: result
+                data: result.dataValues
             })
-        }
-    })
+        })
+    }
+    catch (err) {
+        console.log('Error: ', err);
+        res.json({
+            success: false,
+            data: null,
+            reason: err.message
+        })
+    }
 }
 
-function changeEmailAndNumber(req, res) {
-    var sql = `UPDATE account SET  email = "${req.body.email}", phone_numbers = "${req.body.phone_numbers}", class = "${req.body.class}", faculty = "${req.body.faculty}",
-    course = "${req.body.course}", full_name = "${req.body.full_name}" WHERE MSSV = ${req.body.mssv} `;
-    conn.query(sql, function(err, result) {
-        if (err) console.log(err);
-        else {
-            data = {
-                success: true,
-                message: "Updated"
-            }
-            res.send(data);
-        }
-    })
+function putStudent(req, res) {
+    const { major, faculty, course, email, phonenumber } = req.body;
+
+    try {
+        table.account.update({
+            major: major,
+            faculty: faculty,
+            course: course,
+            email: email,
+            phonenumber: phonenumber
+        },
+            {
+                where: {
+                    id: req.params.id
+                }
+            }).then(function () {
+                table.account.findOne({
+                    where: {
+                        id: req.params.id
+                    }
+                }).then(function (result) {
+                    return res.json({
+                        success: true,
+                        data: result.dataValues
+                    })
+                })
+            })
+    }
+    catch (err) {
+        console.log('Error: ', err);
+        res.json({
+            success: false,
+            data: null,
+            reason: err.message
+        })
+    }
 }
 
-function studentJoinEvent(req, res) {
-    let sql = `INSERT INTO students_register_event(id_stu, id_eve) value(${req.body.id_sv}, ${req.body.id_event})`;
-    conn.query(sql, function(err, result) {
-        if (err) console.log(err);
-        else {
-            let dataresult = {
-                success: true,
-                data: "Register join done"
-            }
-            res.send(dataresult);
-        }
-    })
+function studentRegisterEvent(req, res) {
+    const {id_eve, id_stu} = req.body;
+    try{
+        let listSv = [];
+
+        table.register.create({
+            id_eve: id_eve,
+            id_stu: id_stu
+        }).then(function(){
+            table.register.findAll({
+                whrer: {
+                    id_eve: id_eve
+                }
+            }).then(function(result){
+                result.forEach(function(sv){
+                    listSv.push(sv.dataValues);
+                })
+                return res.json({
+                    success: true,
+                    data: listSv
+                })
+            })
+        })
+    }
+    catch(err){
+        console.log('Error: ', err);
+        res.json({
+            success: false,
+            data: null,
+            reason: err.message
+        })
+    }
 }
 
 
-module.exports.getInformation = getInformation;
-module.exports.changeEmailAndNumber = changeEmailAndNumber;
-module.exports.studentJoinEvent = studentJoinEvent;
+module.exports = {
+    getStudent, 
+    putStudent,
+    studentRegisterEvent
+}
