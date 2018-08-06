@@ -12,11 +12,11 @@ router.get('/work_with_event/:id_eve', eventController.getEvent);
 
 router.get('/work_with_events/:index', eventController.getEvents);
 
-router.put('/work_with_events/:id_eve', eventController.putEvents);
+router.put('/admin/work_with_events/:id_eve', eventController.putEvents);
 
-router.post('/work_with_events', eventController.postStudents);
+router.post('/admin/work_with_events', eventController.postStudents);
 
-router.delete('/work_with_events/:id_eve', eventController.deleteEvents);
+router.delete('/admin/work_with_events/:id_eve', eventController.deleteEvents);
 
 
 module.exports = router;
