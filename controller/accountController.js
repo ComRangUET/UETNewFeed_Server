@@ -1,6 +1,6 @@
-const conn = require('../config');
 const jwt = require('jsonwebtoken');
-const table = require('../config');
+
+const account = require('../models/accountmodels');
 
 async function login(req, res) {
     const user = req.body.user;
@@ -12,7 +12,7 @@ async function login(req, res) {
     }
 
     try {
-        await table.account.findOne({
+        await account.findOne({
                 where: {
                     user: user,
                     password: password
@@ -45,5 +45,4 @@ async function login(req, res) {
     }
 }
 
-module.exports.register = register;
 module.exports.login = login;

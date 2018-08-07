@@ -1,19 +1,16 @@
-const db = require('../config').db;
-
-const event = db.event;
-const register = db.register;
-
+const event = require('../models/eventmodels');
+const register = require('../models/registermodels');
 function getEvents(req, res) {
-    const {index} = req.query;
+    const { index } = req.query;
     try {
         let listEvent = [];
         event.findAll({
             order: [
-                ['id_eve','DESC']
+                ['id_eve', 'DESC']
             ],
-            offset:3*index,
+            offset: 3 * index,
             limit: 3,
-            attributes: ['id_eve','header', 'image', 'place', 'time_start']
+            attributes: ['id_eve', 'header', 'image', 'place', 'time_start']
         }).then(function (result) {
             result.forEach(function (i) {
                 listEvent.push(i.dataValues);
@@ -37,21 +34,18 @@ function getEvents(req, res) {
 }
 
 function getEvent(req, res) {
-    const {id_event} = req.query;
+    const { id_event } = req.query;
     try {
         event.findOne({
             where: {
                 id_eve: id_event
             }
         }).then(function (result) {
-            if(result==null)
-                throw new Error('Id_eve invalid');
-            else{
-                return res.json({
-                    success: true,
-                    data: result
-                })
-            }
+
+            return res.json({
+                success: true,
+                data: result
+            })
         })
     }
     catch (err) {

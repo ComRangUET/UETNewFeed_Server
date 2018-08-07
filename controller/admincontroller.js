@@ -1,10 +1,5 @@
-const db = require('../config').db;
-
-
-const account = db.account;
-const register = db.register;
-
-
+const account = require('../models/accountmodels');
+const register = require('../models/registermodels');
 async function getStudents(req, res) {
     const { major, course, role_id } = req.query;
 

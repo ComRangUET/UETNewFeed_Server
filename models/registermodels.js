@@ -1,5 +1,8 @@
-module.exports = function(sequelize, Sequelize){
-    const register = sequelize.define('students_register_event', {
+const Sequelize = require('sequelize');
+
+const con = require('../config');
+
+    const register = con.define('students_register_event', {
         id_eve: {
             type: Sequelize.INTEGER
         },
@@ -17,5 +20,5 @@ module.exports = function(sequelize, Sequelize){
             freezeTableName: true
         }
     );
-    return register;
-}
+ 
+    module.exports = register;

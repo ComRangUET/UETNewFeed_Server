@@ -1,7 +1,6 @@
-const db = require('../config').db;
+const account = require('../models/accountmodels');
+const register = require('../models/registermodels');
 
-const account = db.account;
-const register = db.register;
 
 function getStudent(req, res) {
     try {

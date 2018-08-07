@@ -1,8 +1,4 @@
-const sequelize = require('sequelize');
-
-
-const db = require('../config').db;
-const news = db.news;
+const news = require('../models/newsmodels');
 
 
 function getNewsList(req, res) {

@@ -1,5 +1,7 @@
-module.exports = function(sequelize, Sequelize){
-    const news = sequelize.define('news', {
+const Sequelize = require('sequelize');
+
+const con = require('../config');
+    const news = con.define('news', {
         id_news: {
             type: Sequelize.INTEGER,
             primaryKey: true,
@@ -23,5 +25,5 @@ module.exports = function(sequelize, Sequelize){
             freezeTableName: true
         }
     );
-    return news;
-}
+
+    module.exports = news;
