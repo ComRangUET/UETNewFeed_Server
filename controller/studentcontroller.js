@@ -1,8 +1,11 @@
-const table = require('../config');
+const db = require('../config').db;
+
+const account = db.account;
+const register = db.register;
 
 function getStudent(req, res) {
     try {
-        table.account.findOne({
+        account.findOne({
             Where: {
                 id: req.params.id
             }
@@ -28,7 +31,7 @@ function putStudent(req, res) {
     const { major, faculty, course, email, phonenumber } = req.body;
 
     try {
-        table.account.update({
+        account.update({
             major: major,
             faculty: faculty,
             course: course,
@@ -40,7 +43,7 @@ function putStudent(req, res) {
                     id: req.params.id
                 }
             }).then(function () {
-                table.account.findOne({
+                account.findOne({
                     where: {
                         id: req.params.id
                     }
@@ -67,11 +70,11 @@ function studentRegisterEvent(req, res) {
     try{
         let listSv = [];
 
-        table.register.create({
+        register.create({
             id_eve: id_eve,
             id_stu: id_stu
         }).then(function(){
-            table.register.findAll({
+            register.findAll({
                 whrer: {
                     id_eve: id_eve
                 }

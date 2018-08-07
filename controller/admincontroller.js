@@ -1,11 +1,16 @@
-const table = require('../config');
+const db = require('../config').db;
+
+
+const account = db.account;
+const register = db.register;
+
 
 async function getStudents(req, res) {
     const { major, course, role_id } = req.query;
 
     try {
         let listSv = [];
-        await table.account.findAll().then(function (result) {
+        await account.findAll().then(function (result) {
             result.forEach(function (i) {
                 listSv.push(i.dataValues);
             })
@@ -45,7 +50,7 @@ async function getStudent(req, res) {
 
     try {
         let listSv = [];
-        await table.account.findAll().then(function (result) {
+        await account.findAll().then(function (result) {
             result.forEach(function (i) {
                 listSv.push(i.dataValues);
             })
@@ -100,7 +105,7 @@ async function putStudents(req, res) {
     const { email, major, faculty, course, phonenumber } = req.body;
 
     try {
-        await table.account.update({
+        await account.update({
             email: email,
             major: major,
             faculty: faculty,
@@ -138,13 +143,13 @@ async function putStudents(req, res) {
 
 function deleteStudents(req, res) {
     try {
-        table.register.destroy({
+        register.destroy({
             where: {
                 id: req.params.id
             }
         });
 
-        table.account.destroy({
+        account.destroy({
             where: {
                 id: req.params.id
             }
@@ -182,7 +187,7 @@ function postStudents(req, res) {
     try {
         if (!role_id || !user || !MSSV || !fullname || !password) throw new Error('role_id, user, MSSV are not require');
 
-        table.account.create({
+        account.create({
             role_id: role_id,
             user: user,
             MSSV: MSSV,
@@ -191,7 +196,7 @@ function postStudents(req, res) {
         })
             .then(function () {
                 let listSv = [];
-                table.account.findAll().then(function (result) {
+                account.findAll().then(function (result) {
                     result.forEach(function (i) {
                         listSv.push(i.dataValues);
                     })

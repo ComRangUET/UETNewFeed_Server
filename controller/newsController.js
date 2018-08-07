@@ -1,21 +1,23 @@
 const sequelize = require('sequelize');
 
 
-const table = require('../config');
+const db = require('../config').db;
+const news = db.news;
+
 
 function getNewsList(req, res) {
     const { index } = req.params;
     try {
+        if(index < 1 )  throw new Error('index invalid');
         let listNews = [];
-        table.news.findAll({
-            attributes: ['id_news', 'header', 'introduce_news', 'image']
-        },
+        news.findAll(
             {
             order: [
                 ['id_news', 'DESC']
             ],
-            offset: 3 * index,
-            limit: 3
+            offset: 8 * (index - 1 ),
+            limit: 8,
+            attributes: ['id_news', 'header', 'introduce_news', 'image']
         }).then(function (result) {
             result.forEach(function (i) {
                 listNews.push(i.dataValues);
@@ -40,14 +42,14 @@ function getNewsList(req, res) {
 function getNews(req, res) {
 
     try {
-        table.news.findOne({
-            attributes: ['header', 'content', 'image']
-        },
+        news.findOne(
             {
             where: {
                 id_news: req.params.id_news
-            }
-        }).then(function (result) {
+            },
+            attributes: ['header', 'content', 'image']
+        }
+        ).then(function (result) {
             return res.json({
                 success: true,
                 data: result.dataValues

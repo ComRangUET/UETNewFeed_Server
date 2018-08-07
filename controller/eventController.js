@@ -1,17 +1,19 @@
-const table = require('../config');
+const db = require('../config').db;
+
+const event = db.event;
+const register = db.register;
 
 function getEvents(req, res) {
-    const {index} = req.params;
+    const {index} = req.query;
     try {
         let listEvent = [];
-        table.event.findAll({
-            attributes: ['id_eve','header', 'image', 'place', 'time_start']
-        },{
+        event.findAll({
             order: [
                 ['id_eve','DESC']
             ],
             offset:3*index,
-            limit: 3
+            limit: 3,
+            attributes: ['id_eve','header', 'image', 'place', 'time_start']
         }).then(function (result) {
             result.forEach(function (i) {
                 listEvent.push(i.dataValues);
@@ -35,17 +37,21 @@ function getEvents(req, res) {
 }
 
 function getEvent(req, res) {
-
+    const {id_event} = req.query;
     try {
-        table.event.findOne({
+        event.findOne({
             where: {
-                id_eve: req.params.id_eve
+                id_eve: id_event
             }
         }).then(function (result) {
-            return res.json({
-                success: true,
-                data: result.dataValues
-            })
+            if(result==null)
+                throw new Error('Id_eve invalid');
+            else{
+                return res.json({
+                    success: true,
+                    data: result
+                })
+            }
         })
     }
     catch (err) {
@@ -63,7 +69,7 @@ async function putEvents(req, res) {
 
     try {
         if (!header || !content || !place || !time_start) throw new Error('Header or content or place or time_start are not require');
-        await table.event.update({
+        await event.update({
             header: header,
             content: content,
             image: image,
@@ -76,7 +82,7 @@ async function putEvents(req, res) {
                 }
             })
             .then(async function () {
-                await table.event.findOne({
+                await event.findOne({
                     where: {
                         id_eve: req.params.id_eve
                     }
@@ -101,13 +107,13 @@ async function putEvents(req, res) {
 
 function deleteEvents(req, res) {
     try {
-        table.register.destroy({
+        register.destroy({
             where: {
                 id_eve: req.params.id_eve
             }
         });
 
-        table.event.destroy({
+        event.destroy({
             where: {
                 id_eve: req.params.id_eve
             }
@@ -144,7 +150,7 @@ function postStudents(req, res) {
     try {
         if (!header || !content || !place || !time_start) throw new Error('header or connter or place or time_start aren not require');
 
-        table.event.create({
+        event.create({
             header: header,
             content: content,
             place: place,
@@ -152,7 +158,7 @@ function postStudents(req, res) {
         })
             .then(function () {
                 let listEvent = [];
-                table.event.findAll().then(function (result) {
+                event.findAll().then(function (result) {
                     result.forEach(function (i) {
                         listEvent.push(i.dataValues);
                     })
