@@ -55,7 +55,7 @@ async function login(req, res) {
                 res.json({
                     success: true,
                     data: null,
-                    token: token
+                    accessToken: token
                 });
             })
             .catch(err => {
