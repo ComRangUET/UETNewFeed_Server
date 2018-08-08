@@ -1,6 +1,14 @@
 const request = require('request');
 const cheerio = require('cheerio');
-const conn = require('../config');
+const mysql =require('mysql');
+const conn = mysql.createConnection({
+    host: 'localhost',
+    user: "root",
+    password: "",
+    database: "qldv"
+})
+
+conn.connect
 
 exports.postPageToDatabase = function (url, refer, img) {
     request(url, (err, response, body) => {
@@ -8,7 +16,7 @@ exports.postPageToDatabase = function (url, refer, img) {
             let id_event;
             const $ = cheerio.load(body);
             const title = $('#content article h2').text();
-            const content = $('#content article div.single-post-content-text.content-pad').html();
+            const content = '<meta name="viewport" content="initial-scale=1, maximum-scale=1">'+$('#content article div.single-post-content-text.content-pad').html();
             const sql = 'INSERT INTO news (header,introduce_news,content,image) VALUES (?,?,?,?)';
             const values = [title, refer, content, img];
             conn.query(sql, values, (err, rows) => {

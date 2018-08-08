@@ -187,30 +187,75 @@ async function postStudents(req, res) {
     }
 }
 
-function configStudentJoinEvent(req, res){
-    const {id_stu, id_eve} = req.body;
+function configStudentJoinEvent(req, res) {
+    const { id_stu, id_eve } = req.body;
 
-    try{
-        register.update({
-            joined: 1
-        }, {
-            where: {
+    register.findOne({
+        where: {
+            id_eve: id_eve,
+            id_stu: id_stu
+        }
+    })
+    .then(function (result) {
+        if (result === null){
+            register.create({
                 id_stu: id_stu,
-                id_eve: id_eve
-            }
-        }).then(function(result){
-
-            console.log(typeof result);
-            res.json({
-                success: true,
-                data: null
+                id_eve: id_eve,
+                joined: 1
             })
+            .then(function(){
+                res.json({
+                    success: true,
+                    data: null
+                })
+            })
+            .catch(function(err){
+                console.log(err);
+                res.json({
+                    success: false,
+                    data: null,
+                    reason: "MSSV not invalid"
+                })
+            })
+        }
+        else{
+            if(result.dataValues.joined == 1){
+                res.json({
+                    success: false,
+                    data: null,
+                    reason: "Masv da duoc diem danh"
+                })
+            }
+            else{
+                register.update({
+                    joined: 1
+                },{
+                    where:{
+                        id_eve: id_eve,
+                        id_stu: id_stu
+                    }
+                })
+                .then(function(){
+                    res.json({
+                        success: true,
+                        data: null
+                    })
+                })
+            }
+        }
+        
+    })
+    .catch(err => {
+        console.log(err);
+        res.json({
+            success: false,
+            data: null,
+            reason: err.message
         })
-    }
-    catch(err){
-
-    }
+    })
 }
+
+
 
 
 
