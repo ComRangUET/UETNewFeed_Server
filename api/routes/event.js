@@ -8,7 +8,7 @@ const verifyToken = require('../../middleware/verify-token');
 
 //router.use(verifyToken.verifyToken);
 
-router.get('/get_event/:id_event', eventController.getEvent);
+router.get('/get_event', eventController.getEvent);
 
 router.get('/', eventController.getEvents);
 
