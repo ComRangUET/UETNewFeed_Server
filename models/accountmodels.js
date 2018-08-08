@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-
+const bcrypt = require('bcrypt');
 
 const con = require('../config');
 
@@ -45,4 +45,7 @@ const account = con.define('account', {
     timestamps: false,
     freezeTableName: true
 });
+
+
+
 module.exports = account;

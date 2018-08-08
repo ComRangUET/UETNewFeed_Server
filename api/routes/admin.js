@@ -17,6 +17,18 @@ router.delete('/work_with_students/:id', adminController.deleteStudents);
 
 router.post('/work_with_students', adminController.postStudents);
 
-//router.delete('/delete_student_register_event/:id', verifyPrivilege('delete_data'), adminController.deleteStudentRegisterEvent);
+router.get('/work_with_roles', adminController.getRoles);
+
+router.post('/work_with_roles', adminController.postRole);
+
+router.delete('/work_with_roles', adminController.deleteRole);
+
+router.get('/work_with_privileges', adminController.getPrivileges);
+
+router.get('/work_with_roles_privileges', adminController.getPrivilegesForRoles);
+
+router.post('/work_with_roles_privileges', adminController.addPrivilegesForRoles);
+
+router.delete('/work_with_roles_privileges', adminController.deletePrivilegesForRoles)
 
 module.exports = router;

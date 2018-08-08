@@ -10,6 +10,7 @@ const roles = con.define('roles', {
     },
     name_role: {
         type: sequelize.STRING,
+        unique: true
     }
 }, {
     timestamps: false,
@@ -51,7 +52,7 @@ const roles_privileges = con.define('roles_privileges', {
     timestamps: false,
     freezeTableName: true
 });
-
+roles_privileges.belongsTo(roles, { foreignKey: 'role_id' });
 roles_privileges.belongsTo(privileges, { foreignKey: 'privileges_id' });
 account.belongsTo(roles, { foreignKey: 'role_id' });
 

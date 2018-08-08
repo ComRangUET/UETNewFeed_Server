@@ -21,12 +21,13 @@ async function login(req, res) {
             })
             .then(async(result) => {
                 const pw = await bcrypt.compare(password, result.password);
+                console.log(pw);
                 if (pw) {
                     await rp.roles.findOne({
                             where: { id: result.role_id }
                         })
                         .then(rows => {
-                            const token = jwt.sign({ idaccount: result.dataValues.id, role: rows.dataValues.name_role }, process.env.SECRET_KEY, {
+                            const token = jwt.sign({ idaccount: result.dataValues.id, role_id: rows.dataValues.id }, process.env.SECRET_KEY, {
                                 expiresIn: 5000000
                             });
                             res.json({
@@ -59,9 +60,48 @@ async function login(req, res) {
     }
 }
 
+async function changePasword(req, res, next) {
+    const password = req.body.password;
+    const newPassword = req.body.newPassword;
+    let salt = await bcrypt.genSalt(5);
+    let hashPassword = await bcrypt.hash(newPassword, salt);
+    try {
+        await account.findOne({
+                where: {
+                    id: req.tokenData.idaccount
+                }
+            })
+            .then(async(result) => {
+                const pw = await bcrypt.compare(password, result.password);
+                if (pw) {
+                    await account.update({
+                            password: hashPassword
+                        }, {
+                            where: { id: req.tokenData.idaccount }
+                        })
+                        .then(() => {
+                            res.json({
+                                success: true,
+                                message: null
+                            })
+                        })
+
+                } else {
+                    res.json({
+                        success: false,
+                        message: "Tài khoản của bạn không chính xác"
+                    })
+                }
+            })
+    } catch (error) {
+        res.json({
+            success: false,
+            result: error.message
+        })
+    }
+}
 
 module.exports = {
     login,
-    changePassword,
-    checkPassword
+    changePasword
 };
