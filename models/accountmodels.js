@@ -11,7 +11,8 @@ const account = con.define('account', {
     },
     user: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        unique: true
     },
     password: {
         type: Sequelize.STRING,

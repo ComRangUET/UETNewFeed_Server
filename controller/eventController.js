@@ -1,5 +1,7 @@
 const event = require('../models/eventmodels');
 const register = require('../models/registermodels');
+
+
 function getEvents(req, res) {
     const { index } = req.query;
     try {
@@ -34,7 +36,7 @@ function getEvents(req, res) {
 }
 
 function getEvent(req, res) {
-    const { id_event } = req.query;
+    const { id_event } = req.params;
     try {
         event.findOne({
             where: {

@@ -6,9 +6,9 @@ const verifyModel = require('../../middleware/verify-token');
 
 router.use(verifyModel.verifyToken);
 
-router.get('/:id', student.getStudent);
+router.get('/', student.getStudent);
 
-router.put('/:id', student.putStudent);
+router.put('/', student.putStudent);
 
 router.post('/', student.studentRegisterEvent);
 

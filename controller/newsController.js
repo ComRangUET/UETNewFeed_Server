@@ -2,7 +2,7 @@ const news = require('../models/newsmodels');
 
 
 function getNewsList(req, res) {
-    const { index } = req.params;
+    const { index } = req.query;
     try {
         if(index < 1 )  throw new Error('index invalid');
         let listNews = [];
@@ -36,12 +36,12 @@ function getNewsList(req, res) {
 }
 
 function getNews(req, res) {
-
+    const {id_news} = req.query;
     try {
         news.findOne(
             {
             where: {
-                id_news: req.params.id_news
+                id_news: id_news
             },
             attributes: ['header', 'content', 'image']
         }

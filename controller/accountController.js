@@ -21,7 +21,6 @@ async function login(req, res) {
             })
             .then(async(result) => {
                 const pw = await bcrypt.compare(password, result.password);
-                console.log(pw);
                 if (pw) {
                     await rp.roles.findOne({
                             where: { id: result.role_id }

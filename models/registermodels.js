@@ -13,6 +13,11 @@ const con = require('../config');
             type: Sequelize.TINYINT,
             allowNull: false,
             defaultValue: 0
+        },
+        joined: {
+            type: Sequelize.TINYINT,
+            defaultValue: 0,
+            allowNull: false,
         }
     },
         {

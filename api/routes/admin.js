@@ -5,7 +5,7 @@ const adminController = require('../../controller/admincontroller')
 const verifyPrivilege = require('../../middleware/verifyPrivileges');
 const verifyToken = require('../../middleware/verify-token');
 
-router.use(verifyToken.verifyToken);
+//router.use(verifyToken.verifyToken);
 
 router.get('/work_with_students', adminController.getStudents);
 
@@ -30,5 +30,7 @@ router.get('/work_with_roles_privileges', adminController.getPrivilegesForRoles)
 router.post('/work_with_roles_privileges', adminController.addPrivilegesForRoles);
 
 router.delete('/work_with_roles_privileges', adminController.deletePrivilegesForRoles)
+
+router.post('/config', adminController.configStudentJoinEvent);
 
 module.exports = router;
