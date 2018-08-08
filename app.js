@@ -18,7 +18,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 
-app.use('/api/event', eventRouter);
+app.use('/api/events', eventRouter);
 app.use('/api/news', news);
 app.use('/api/admin', admin);
 app.use('/api', account);

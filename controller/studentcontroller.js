@@ -5,8 +5,8 @@ const register = require('../models/registermodels');
 function getStudent(req, res) {
     try {
         account.findOne({
-            Where: {
-                id: req.params.id
+            where: {
+                id: req.tokenData.idaccount
             }
         }).then(function (result) {
             return res.json({
@@ -27,24 +27,21 @@ function getStudent(req, res) {
 }
 
 function putStudent(req, res) {
-    const { major, faculty, course, email, phonenumber } = req.body;
+    const {email, phonenumber } = req.body;
 
     try {
         account.update({
-            major: major,
-            faculty: faculty,
-            course: course,
             email: email,
             phonenumber: phonenumber
         },
             {
                 where: {
-                    id: req.params.id
+                    id: req.tokenData.idaccount
                 }
             }).then(function () {
                 account.findOne({
                     where: {
-                        id: req.params.id
+                        id: req.tokenData.idaccount
                     }
                 }).then(function (result) {
                     return res.json({
@@ -65,16 +62,16 @@ function putStudent(req, res) {
 }
 
 function studentRegisterEvent(req, res) {
-    const {id_eve, id_stu} = req.body;
+    const {id_eve} = req.body;
     try{
         let listSv = [];
 
         register.create({
             id_eve: id_eve,
-            id_stu: id_stu
+            id_stu: req.tokenData.idaccount
         }).then(function(){
             register.findAll({
-                whrer: {
+                where: {
                     id_eve: id_eve
                 }
             }).then(function(result){

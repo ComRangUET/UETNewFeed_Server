@@ -21,6 +21,8 @@ async function login(req, res) {
             })
             .then(async(result) => {
                 const pw = await bcrypt.compare(password, result.password);
+                console.log(password);
+                console.log(result.password);
                 if (pw) {
                     await rp.roles.findOne({
                             where: { id: result.role_id }
@@ -61,7 +63,5 @@ async function login(req, res) {
 
 
 module.exports = {
-    login,
-    changePassword,
-    checkPassword
+    login
 };

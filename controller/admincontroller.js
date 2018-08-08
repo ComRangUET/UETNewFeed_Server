@@ -7,23 +7,23 @@ async function getStudents(req, res) {
 
     try {
         let listSv = [];
-        await account.findAll().then(function(result) {
-            result.forEach(function(i) {
+        await account.findAll().then(function (result) {
+            result.forEach(function (i) {
                 listSv.push(i.dataValues);
             })
         })
         if (course) {
-            listSv = listSv.filter(function(sv) {
+            listSv = listSv.filter(function (sv) {
                 return sv.course == course;
             })
         }
         if (major) {
-            listSv = listSv.filter(function(sv) {
+            listSv = listSv.filter(function (sv) {
                 return sv.major == major;
             })
         }
         if (role_id) {
-            listSv = listSv.filter(function(sv) {
+            listSv = listSv.filter(function (sv) {
                 return sv.role_id == role_id;
             })
         }
@@ -46,20 +46,20 @@ async function getStudent(req, res) {
 
     try {
         let listSv = [];
-        await account.findAll().then(function(result) {
-            result.forEach(function(i) {
+        await account.findAll().then(function (result) {
+            result.forEach(function (i) {
                 listSv.push(i.dataValues);
             })
         });
 
         if (id) {
-            listSv = listSv.filter(function(sv) {
+            listSv = listSv.filter(function (sv) {
                 return sv.id == id;
             })
         }
 
         if (MSSV) {
-            listSv = listSv.filter(function(sv) {
+            listSv = listSv.filter(function (sv) {
                 return sv.MSSV == MSSV;
             })
         }
@@ -83,23 +83,23 @@ async function putStudents(req, res) {
 
     try {
         await account.update({
-                email: email,
-                major: major,
-                faculty: faculty,
-                phonenumber: phonenumber,
-                course: course
-            }, {
+            email: email,
+            major: major,
+            faculty: faculty,
+            phonenumber: phonenumber,
+            course: course
+        }, {
                 where: {
                     id: req.params.id
                 }
             })
-            .then(async function() {
+            .then(async function () {
                 await table.account.findOne({
-                        where: {
-                            id: req.params.id
-                        }
-                    })
-                    .then(function(result) {
+                    where: {
+                        id: req.params.id
+                    }
+                })
+                    .then(function (result) {
                         return res.json({
                             success: true,
                             data: result.dataValues
@@ -125,18 +125,18 @@ function deleteStudents(req, res) {
         });
 
         account.destroy({
-                where: {
-                    id: req.params.id
-                }
-            })
-            .then(function() {
+            where: {
+                id: req.params.id
+            }
+        })
+            .then(function () {
                 let listSv = [];
-                table.account.findAll().then(function(result) {
-                        result.forEach(function(i) {
-                            listSv.push(i.dataValues);
-                        })
+                table.account.findAll().then(function (result) {
+                    result.forEach(function (i) {
+                        listSv.push(i.dataValues);
                     })
-                    .then(function() {
+                })
+                    .then(function () {
                         return res.json({
                             success: true,
                             data: listSv
@@ -164,25 +164,17 @@ async function postStudents(req, res) {
         let hashPassword = await bcrypt.hash(password, salt);
 
         account.create({
-                role_id: role_id,
-                user: user,
-                MSSV: MSSV,
-                fullname: fullname,
-                password: hashPassword
-            })
-            .then(function() {
-                let listSv = [];
-                account.findAll().then(function(result) {
-                        result.forEach(function(i) {
-                            listSv.push(i.dataValues);
-                        })
-                    })
-                    .then(function() {
-                        res.json({
-                            success: true,
-                            data: listSv
-                        })
-                    })
+            role_id: role_id,
+            user: user,
+            MSSV: MSSV,
+            fullname: fullname,
+            password: hashPassword
+        })
+            .then(function () {
+                res.json({
+                    success: true,
+                    data: null
+                })
             })
 
     } catch (err) {
@@ -195,6 +187,31 @@ async function postStudents(req, res) {
     }
 }
 
+function configStudentJoinEvent(req, res){
+    const {id_stu, id_eve} = req.body;
+
+    try{
+        register.update({
+            joined: 1
+        }, {
+            where: {
+                id_stu: id_stu,
+                id_eve: id_eve
+            }
+        }).then(function(result){
+
+            console.log(typeof result);
+            res.json({
+                success: true,
+                data: null
+            })
+        })
+    }
+    catch(err){
+
+    }
+}
+
 
 
 module.exports = {
@@ -202,5 +219,6 @@ module.exports = {
     getStudent,
     putStudents,
     deleteStudents,
-    postStudents
+    postStudents,
+    configStudentJoinEvent
 }
