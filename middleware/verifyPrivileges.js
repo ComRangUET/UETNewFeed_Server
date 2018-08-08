@@ -1,25 +1,47 @@
 const con = require('../config');
+const rp = require('../models/roles-privileges-model');
+const account = require('../models/accountmodels');
 
 function verifyPrivileges(privilege) {
-    return (req, res, next) => {
-        con.query(`SELECT role_id FROM account WHERE id = ${req.tokenData.idaccount}`, (err, rows) => {
-            const sql = `SELECT privileges.name, privileges.alias FROM roles_privileges JOIN privileges on roles_privileges.privileges_id = privileges.id JOIN roles on roles_privileges.role_id = roles.id WHERE roles_privileges.role_id = ${rows[0].role_id} AND privileges.alias = '${req.method}' AND privileges.name = '${privilege}'`;
-            con.query(sql, (err, rows) => {
-                if (err) {
-                    res.status(403).json({
-                        success: false,
-                        message: err.message
-                    });
-                } else if (rows.length > 0) {
-                    next();
-                } else {
-                    res.status(403).json({
-                        success: false,
-                        message: "tài khoản của bạn không có quyền truy cập vào chức năng này"
-                    })
+    return async(req, res, next) => {
+        try {
+            await account.findOne({
+                where: {
+                    id: 1
                 }
+            }).then(async(result) => {
+                const role_id = result.role_id;
+                await rp.roles_privileges.findAll({
+                    where: { role_id: role_id },
+                    include: [{
+                        model: rp.privileges,
+                        where: {
+                            name: privilege,
+                            alias: req.method
+                        }
+                    }]
+                }).then(result => {
+                    let value = [];
+                    result.forEach(i => {
+                        value.push(i.dataValues);
+                    })
+                    if (value[0] === undefined) {
+                        res.json({
+                            success: false,
+                            message: "Tài khoản của bạn không có quyền truy cập vào chức năng này"
+                        });
+                    } else {
+                        next();
+                    }
+                })
+            })
+
+        } catch (err) {
+            res.json({
+                success: false,
+                message: err.message
             });
-        });
+        }
     }
 }
 module.exports = verifyPrivileges;

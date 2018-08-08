@@ -41,10 +41,8 @@ const account = con.define('account', {
         type: Sequelize.STRING,
         allowNull: false
     }
-},
-    {
-        timestamps: false,
-        freezeTableName: true
-    }
-);
+}, {
+    timestamps: false,
+    freezeTableName: true
+});
 module.exports = account;
