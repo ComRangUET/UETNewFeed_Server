@@ -51,6 +51,12 @@ function getNews(req, res) {
                 data: result.dataValues
             })
         })
+        .catch(function(err){
+            res.json({
+                success: false,
+                data: null
+            })
+        })
     }
     catch (err) {
         console.log('Error', err);

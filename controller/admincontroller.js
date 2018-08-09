@@ -268,9 +268,16 @@ async function getPrivileges(req, res) {
 }
 
 function configStudentJoinEvent(req, res) {
-    const { id_stu, id_eve } = req.body;
+    const { MSSV, id_eve } = req.body;
 
-    register.findOne({
+    account.findOne({
+        where: {
+            MSSV: MSSV
+        }
+    })
+    .then(function(student){
+        const id_stu = student.dataValues.id;
+        register.findOne({
             where: {
                 id_eve: id_eve,
                 id_stu: id_stu
@@ -284,26 +291,36 @@ function configStudentJoinEvent(req, res) {
                         joined: 1
                     })
                     .then(function() {
-                        res.json({
-                            success: true,
-                            data: null
+                        account.findOne({
+                            where:{
+                                id: id_stu
+                            },
+                            attributes: ['fullname']
                         })
-                    })
-                    .catch(function(err) {
-                        console.log(err);
-                        res.json({
-                            success: false,
-                            data: null,
-                            reason: "MSSV not invalid"
+                        .then(function(data){
+                            res.json({
+                                success: true,
+                                data: data.dataValues
+                            })
                         })
+                        
                     })
             } else {
                 if (result.dataValues.joined == 1) {
-                    res.json({
-                        success: false,
-                        data: null,
-                        reason: "Masv da duoc diem danh"
+                    account.findOne({
+                        where: {
+                            id: id_stu
+                        },
+                        attributes: ["fullname"]
                     })
+                    .then(function(data){
+                        res.json({
+                            success: false,
+                            data: data.dataValues.fullname,
+                            reason: "Masv da duoc diem danh"
+                        })
+                    })
+                   
                 } else {
                     register.update({
                             joined: 1
@@ -316,7 +333,7 @@ function configStudentJoinEvent(req, res) {
                         .then(function() {
                             res.json({
                                 success: true,
-                                data: null
+                                data: result.dataValues.fullname
                             })
                         })
                 }
@@ -331,6 +348,15 @@ function configStudentJoinEvent(req, res) {
                 reason: err.message
             })
         })
+    })
+    .catch(function(err){
+        console.log(err);
+        res.json({
+            success: false,
+            data: null,
+            reason: "MSSV invalid"
+        })
+    })
 }
 
 

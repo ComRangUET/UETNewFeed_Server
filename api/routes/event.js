@@ -18,5 +18,5 @@ router.post('/', eventController.postStudents);
 
 router.delete('/:id_eve', eventController.deleteEvents);
 
-
+router.get('/listStudent/:id_eve', eventController.getStuRegisterEvent);
 module.exports = router;
