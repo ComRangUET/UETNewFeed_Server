@@ -36,7 +36,7 @@ function getEvents(req, res) {
 }
 
 function getEvent(req, res) {
-    const { id_event } = req.params;
+    const { id_event } = req.query;
     try {
         event.findOne({
             where: {
@@ -46,7 +46,7 @@ function getEvent(req, res) {
 
             return res.json({
                 success: true,
-                data: result
+                data: result.dataValues
             })
         })
     }
@@ -178,11 +178,41 @@ function postStudents(req, res) {
     }
 }
 
+function getStuRegisterEvent(req, res){
+    try{
+        register.findAll({
+            where: {
+                id_eve: req.params.id_eve
+            }
+        }).then(function(result){
+            let listSv = [];
+            result.forEach(function(sv){
+                listSv.push(sv.dataValues);
+            })
+            return res.json({
+                success: true,
+                data: listSv
+            })
+        })
+    }
+    catch(err){
+        console.log(err);
+        res.json({
+            success: false,
+            data: null,
+            reason: err.message
+        })
+    }
+}
+
+
+
 
 module.exports = {
     getEvent,
     getEvents,
     putEvents,
     deleteEvents,
-    postStudents
+    postStudents,
+    getStuRegisterEvent
 }
