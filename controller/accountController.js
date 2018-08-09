@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const account = require('../models/accountmodels');
 const rp = require('../models/roles-privileges-model')
 
+
 async function login(req, res) {
     const user = req.body.user;
     const password = req.body.password;
@@ -82,8 +83,7 @@ async function changePasword(req, res, next) {
                         })
                         .then(() => {
                             res.json({
-                                success: true,
-                                message: null
+                                success: true
                             })
                         })
 
