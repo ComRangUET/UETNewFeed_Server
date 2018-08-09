@@ -15,16 +15,16 @@ async function login(req, res) {
 
     try {
         await account.findOne({
-                where: {
-                    user: user
-                }
-            })
-            .then(async(result) => {
+            where: {
+                user: user
+            }
+        })
+            .then(async (result) => {
                 const pw = await bcrypt.compare(password, result.password);
                 if (pw) {
                     await rp.roles.findOne({
-                            where: { id: result.role_id }
-                        })
+                        where: { id: result.role_id }
+                    })
                         .then(rows => {
                             const token = jwt.sign({ idaccount: result.dataValues.id, role_id: result.dataValues.role_id }, process.env.SECRET_KEY, {
                                 expiresIn: 5000000
@@ -32,7 +32,9 @@ async function login(req, res) {
                             res.json({
                                 success: true,
                                 data: null,
-                                accessToken: token
+                                accessToken: token,
+                                MSSV: result.dataValues.MSSV,
+                                role_id: result.dataValues.role_id
                             });
                         });
                 } else {
@@ -66,16 +68,16 @@ async function changePasword(req, res, next) {
     let hashPassword = await bcrypt.hash(newPassword, salt);
     try {
         await account.findOne({
-                where: {
-                    id: req.tokenData.idaccount
-                }
-            })
-            .then(async(result) => {
+            where: {
+                id: req.tokenData.idaccount
+            }
+        })
+            .then(async (result) => {
                 const pw = await bcrypt.compare(password, result.password);
                 if (pw) {
                     await account.update({
-                            password: hashPassword
-                        }, {
+                        password: hashPassword
+                    }, {
                             where: { id: req.tokenData.idaccount }
                         })
                         .then(() => {

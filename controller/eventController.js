@@ -10,7 +10,7 @@ function getEvents(req, res) {
             order: [
                 ['id_eve', 'DESC']
             ],
-            offset: 3 * index,
+            offset: 3 * index ,
             limit: 3,
             attributes: ['id_eve', 'header', 'image', 'place', 'time_start']
         }).then(function (result) {
@@ -38,6 +38,7 @@ function getEvents(req, res) {
 function getEvent(req, res) {
     const { id_event } = req.query;
     try {
+        if(id_event==null)  throw new Error("id_event invalid");
         event.findOne({
             where: {
                 id_eve: id_event
@@ -49,9 +50,15 @@ function getEvent(req, res) {
                 data: result.dataValues
             })
         })
+        .catch(function(err){
+            return res.json({
+                success: false,
+                data: null,
+                reason: err.message
+            })
+        })
     }
     catch (err) {
-        console.log('error', err);
         res.json({
             success: false,
             data: null,
@@ -61,16 +68,17 @@ function getEvent(req, res) {
 }
 
 async function putEvents(req, res) {
-    const { header, content, image, place, time_start } = req.body;
+    const { header, content, image, place, time_start, event_type } = req.body;
 
     try {
-        if (!header || !content || !place || !time_start) throw new Error('Header or content or place or time_start are not require');
+        if (!header || !content || !place || !time_start) throw new Error('Header or content or place or time_start or event_type are not require');
         await event.update({
             header: header,
             content: content,
             image: image,
             place: place,
-            time_start: time_start
+            time_start: time_start,
+            event_type: event_type
         },
             {
                 where: {
@@ -92,7 +100,6 @@ async function putEvents(req, res) {
             })
     }
     catch (err) {
-        console.log('error', err);
         res.json({
             success: false,
             data: null,
@@ -141,7 +148,7 @@ function deleteEvents(req, res) {
 }
 
 function postStudents(req, res) {
-    const { header, content, image, place, time_start } = req.body;
+    const { header, content, image, place, time_start , event_type} = req.body;
 
     try {
         if (!header || !content || !place || !time_start) throw new Error('header or connter or place or time_start aren not require');
@@ -150,7 +157,8 @@ function postStudents(req, res) {
             header: header,
             content: content,
             place: place,
-            time_start: time_start
+            time_start: time_start,
+            event_type: event_type
         })
             .then(function () {
                 let listEvent = [];
@@ -178,7 +186,7 @@ function postStudents(req, res) {
     }
 }
 
-function getStuRegisterEvent(req, res){
+function getListStuRegisterEvent(req, res){
     try{
         register.findAll({
             where: {
@@ -205,14 +213,78 @@ function getStuRegisterEvent(req, res){
     }
 }
 
+function getListEventsNeedConfig(req, res){
+    try{
+        event.findAll({
+            where: {
+                event_type: 1
+            },
+            attributes: ['header', 'id_eve']
+        }).then(function(result){
+            let listEvent = [];
+            result.forEach(function(e){
+                listEvent.push(e);
+            })
 
+            return res.json({
+                success: true,
+                data: listEvent
+            })
+        })
+    }
+    catch(err){
+        console.log(err);
+        return res.json({
+            success: false,
+            data: null,
+            reason: err.message
+        })
+    }
+}
 
-
+function getListStuJoinEvent(req, res){
+    try{
+        register.findAll({
+            where: {
+                id_eve: req.params.id_eve,
+                joined: 1
+            }
+        })
+        .then(function(result){
+            let listSv = [];
+            result.forEach(function(sv){
+                listSv.push(sv);
+            })
+            return res.json({
+                success: true,
+                data: listSv
+            })
+        })
+        .catch(function(err){
+            console.log(err);
+            return res.json({
+                success: true,
+                data: null,
+                reason: err.message
+            })
+        })
+    }
+    catch(err){
+        console.log(err);
+        return res.json({
+            success: true,
+            data: null,
+            reason: err.message
+        })
+    }
+}
 module.exports = {
     getEvent,
     getEvents,
     putEvents,
     deleteEvents,
     postStudents,
-    getStuRegisterEvent
+    getListStuRegisterEvent,
+    getListEventsNeedConfig,
+    getListStuJoinEvent
 }

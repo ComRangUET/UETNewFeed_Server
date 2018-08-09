@@ -20,7 +20,10 @@ const account = con.define('account', {
 
     },
     email: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING, 
+        allowNull: true, 
+        unique: true, 
+        validate: { isEmail: {msg: "Email invalid."} }
     },
     course: {
         type: Sequelize.INTEGER
@@ -35,12 +38,18 @@ const account = con.define('account', {
     class_name: {
         type: Sequelize.DATE
     },
-    phonenumber: {
-        type: Sequelize.STRING,
-    },
+    phonenumber: {type: Sequelize.STRING, 
+        allowNull: true, 
+        unique: true, 
+        validate: { len: {args: [7, 20], msg: "Phone number invalid, too short."}, 
+        isNumeric: { msg: "not a valid phone number."} }},
     MSSV: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
+    },
+    token:{
+        type: Sequelize.STRING
     }
 }, {
     timestamps: false,

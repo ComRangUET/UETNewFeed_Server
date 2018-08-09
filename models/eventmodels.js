@@ -24,6 +24,9 @@ const event = con.define('event', {
     },
     time_start: {
         type: Sequelize.DATE
+    },
+    event_type: {
+        type: Sequelize.TINYINT
     }
 },
     {

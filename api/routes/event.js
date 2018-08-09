@@ -18,5 +18,9 @@ router.post('/', verifyToken.verifyToken, verifyPrivileges('post_event'), eventC
 
 router.delete('/:id_eve', verifyToken.verifyToken, verifyPrivileges('delete_data'), eventController.deleteEvents);
 
-router.get('/listStudent/:id_eve', eventController.getStuRegisterEvent);
+router.get('/get_list_students_register_event/:id_eve', eventController.getListStuRegisterEvent);
+
+router.get('/get_list_events_need_config', eventController.getListEventsNeedConfig);
+
+router.get('/get_list_students_join_event/:id_eve', eventController.getListStuJoinEvent );
 module.exports = router;

@@ -269,7 +269,6 @@ async function getPrivileges(req, res) {
 
 function configStudentJoinEvent(req, res) {
     const { MSSV, id_eve } = req.body;
-
     account.findOne({
         where: {
             MSSV: MSSV
@@ -315,8 +314,8 @@ function configStudentJoinEvent(req, res) {
                     })
                     .then(function(data){
                         res.json({
-                            success: false,
-                            data: data.dataValues.fullname,
+                            success: true,
+                            data: data.dataValues,
                             reason: "Masv da duoc diem danh"
                         })
                     })
@@ -341,7 +340,6 @@ function configStudentJoinEvent(req, res) {
 
         })
         .catch(err => {
-            console.log(err);
             res.json({
                 success: false,
                 data: null,
@@ -350,7 +348,6 @@ function configStudentJoinEvent(req, res) {
         })
     })
     .catch(function(err){
-        console.log(err);
         res.json({
             success: false,
             data: null,
