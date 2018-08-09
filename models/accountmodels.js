@@ -1,5 +1,4 @@
 const Sequelize = require('sequelize');
-const bcrypt = require('bcrypt');
 
 const con = require('../config');
 
@@ -41,6 +40,9 @@ const account = con.define('account', {
     MSSV: {
         type: Sequelize.STRING,
         allowNull: false
+    },
+    token: {
+        type: Sequelize.STRING
     }
 }, {
     timestamps: false,

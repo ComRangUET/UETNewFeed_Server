@@ -2,8 +2,17 @@ const express = require('express');
 const Router = express.Router();
 const verify = require('../../middleware/verify-token');
 const accountController = require('../../controller/accountController');
+const RateLimit = require('express-rate-limit');
 
-Router.post('/login', accountController.login)
+const loginLimiter = new RateLimit({
+    windowMs: 15 * 60 * 1000,
+    delayAfter: 3,
+    delayMs: 1 * 1000,
+    max: 5,
+    message: "Bạn đã đăng nhập quá nhiều lần, hãy thử  lại sau 15 phút nữa."
+})
+
+Router.post('/login', loginLimiter, accountController.login)
 Router.put('/change_password', verify.verifyToken, accountController.changePasword);
 
 module.exports = Router;

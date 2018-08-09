@@ -11,18 +11,20 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 dotenv.config();
 const account = require('./api/routes/account');
+const notification = require('./api/routes/notification');
 // connect to mysql
 app.use(cors());
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
+app.set('trust proxy', 'loopback', 'linklocal');
 
 app.use('/api/events', eventRouter);
 app.use('/api/news', news);
 app.use('/api/admin', admin);
 app.use('/api', account);
 app.use('/api/student', student);
+app.use('/api/notification', notification);
 /* app.use('/', function(req, res){
     res.send('Welcome to home page');
 }) */
