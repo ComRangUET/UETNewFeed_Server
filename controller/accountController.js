@@ -26,7 +26,7 @@ async function login(req, res) {
                             where: { id: result.role_id }
                         })
                         .then(rows => {
-                            const token = jwt.sign({ idaccount: result.dataValues.id, role_id: rows.dataValues.id }, process.env.SECRET_KEY, {
+                            const token = jwt.sign({ idaccount: result.dataValues.id, role_id: result.dataValues.role_id }, process.env.SECRET_KEY, {
                                 expiresIn: 5000000
                             });
                             res.json({

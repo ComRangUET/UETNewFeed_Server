@@ -12,11 +12,11 @@ router.get('/get_event', eventController.getEvent);
 
 router.get('/', eventController.getEvents);
 
-router.put('/:id_eve', eventController.putEvents);
+router.put('/:id_eve', verifyToken.verifyToken, verifyPrivileges('update_data'), eventController.putEvents);
 
-router.post('/', eventController.postStudents);
+router.post('/', verifyToken.verifyToken, verifyPrivileges('post_event'), eventController.postStudents);
 
-router.delete('/:id_eve', eventController.deleteEvents);
+router.delete('/:id_eve', verifyToken.verifyToken, verifyPrivileges('delete_data'), eventController.deleteEvents);
 
 
 module.exports = router;
