@@ -17,7 +17,7 @@ const con = require('../config');
             type: Sequelize.STRING
         },
         image: {
-            type: Sequelize.STRING
+            type: Sequelize.STRING,
         }
     },
         {

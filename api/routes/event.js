@@ -14,7 +14,7 @@ router.get('/', eventController.getEvents);
 
 router.put('/:id_eve', verifyToken.verifyToken, verifyPrivileges('update_data'), eventController.putEvents);
 
-router.post('/', verifyToken.verifyToken, verifyPrivileges('post_event'), eventController.postStudents);
+router.post('/', verifyToken.verifyToken, verifyPrivileges('post_event'), eventController.postEvent);
 
 router.delete('/:id_eve', verifyToken.verifyToken, verifyPrivileges('delete_data'), eventController.deleteEvents);
 
@@ -22,5 +22,5 @@ router.get('/get_list_students_register_event/:id_eve', eventController.getListS
 
 router.get('/get_list_events_need_config', eventController.getListEventsNeedConfig);
 
-router.get('/get_list_students_join_event/:id_eve', eventController.getListStuJoinEvent );
+router.get('/get_students_join_event/:id_eve', eventController.getStudentsJoinEvent );
 module.exports = router;

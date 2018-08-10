@@ -17,7 +17,6 @@ function getStudent(req, res) {
         })
     }
     catch (err) {
-        console.log('Error: ', err);
         res.json({
             success: false,
             data: null,
@@ -50,9 +49,15 @@ function putStudent(req, res) {
                     })
                 })
             })
+            .catch(function(err){
+                res.json({
+                    success: false,
+                    data: null,
+                    reason: err.message
+                })
+            })
     }
     catch (err) {
-        console.log('Error: ', err);
         res.json({
             success: false,
             data: null,
@@ -64,29 +69,41 @@ function putStudent(req, res) {
 function studentRegisterEvent(req, res) {
     const {id_eve} = req.body;
     try{
-        let listSv = [];
-
         register.create({
             id_eve: id_eve,
             id_stu: req.tokenData.idaccount
         }).then(function(){
-            register.findAll({
-                where: {
-                    id_eve: id_eve
-                }
-            }).then(function(result){
-                result.forEach(function(sv){
-                    listSv.push(sv.dataValues);
-                })
-                return res.json({
-                    success: true,
-                    data: listSv
-                })
+            return res.json({
+                success: true,
             })
         })
     }
     catch(err){
-        console.log('Error: ', err);
+        res.json({
+            success: false,
+            data: null,
+            reason: err.message
+        })
+    }
+}
+
+function studentCanleRegister(req, res){
+    const {id_eve} = req.body;
+
+    try{
+        register.destroy({
+            where: {
+                id_eve: id_eve,
+                id_stu: req.tokenData.idaccount
+            }
+        }).then(function(){
+            res.json({
+                success: true,
+                data: null
+            })
+        })
+    }
+    catch(err){
         res.json({
             success: false,
             data: null,
@@ -98,5 +115,6 @@ function studentRegisterEvent(req, res) {
 module.exports = {
     getStudent, 
     putStudent,
-    studentRegisterEvent
+    studentRegisterEvent,
+    studentCanleRegister
 }

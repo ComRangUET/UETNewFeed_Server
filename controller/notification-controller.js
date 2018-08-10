@@ -1,5 +1,6 @@
 const account = require('../models/accountmodels');
-const rp = require('request-promise')
+const rp = require('request-promise');
+
 async function putToken(req, res) {
     try {
         account.update({ token: req.body.token }, {
@@ -42,9 +43,10 @@ async function sendNotification(req, res) {
                         })
                         .then(() => {
                             res.json({
-                                success: true
+                                success: true, 
+                                message: "Gửi thành công"
                             })
-                        })
+                        })  
                 });
             })
     } catch (error) {

@@ -32,4 +32,8 @@ router.delete('/work_with_roles_privileges', verifyPrivilege('roles_privileges')
 
 router.post('/config', verifyPrivilege('roles_privileges'), adminController.configStudentJoinEvent);
 
+router.get('/get_list', adminController.getInforSchool);
+
+router.post('/abc', adminController.addStudentToEvent);
+
 module.exports = router;

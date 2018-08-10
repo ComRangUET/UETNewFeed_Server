@@ -17,7 +17,8 @@ const url = 'https://uet.vnu.edu.vn/category/tin-tuc/tin-sinh-vien/';
 
         if (id !== idFile) {
             console.log(true);
-            const srcImage = $('#content div.blog-listing').children().eq(0).children().eq(0).children().eq(0).children().eq(0).children().eq(0).children().eq(0).children().eq(0).children().eq(0).attr('src');
+            //const srcImage = $('#content div.blog-listing').children().eq(0).children().eq(0).children().eq(0).children().eq(0).children().eq(0).children().eq(0).children().eq(0).children().eq(0).attr('src');
+            const srcImage = "https://i.imgur.com/KjOwSKk.png";
             const urlScrapePage = $('#content div.blog-listing ').children().eq(0).children().eq(0).children().eq(0).children().eq(0).children().eq(0).children().eq(0).children().eq(0).attr('href');
             let referrence = $('#content div.blog-listing').children().eq(0).children().eq(0).children().eq(1).children().eq(0).children().eq(0).children().eq(1).text();
 

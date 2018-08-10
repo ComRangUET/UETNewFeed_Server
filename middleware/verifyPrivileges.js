@@ -18,8 +18,6 @@ function verifyPrivileges(privilege) {
                 }]
             }).then(result => {
                 let value = [];
-                console.log(result);
-                console.log(result)
                 result.forEach(i => {
                     value.push(i.dataValues);
                 })

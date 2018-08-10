@@ -27,6 +27,9 @@ const event = con.define('event', {
     },
     event_type: {
         type: Sequelize.TINYINT
+    },
+    introduce_eve: {
+        type: Sequelize.STRING
     }
 },
     {

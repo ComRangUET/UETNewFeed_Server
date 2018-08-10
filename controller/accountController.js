@@ -34,14 +34,14 @@ async function login(req, res) {
                                 success: true,
                                 data: null,
                                 accessToken: token,
-                                MSSV: result.dataValues.MSSV,
+                                MSSV: `${result.dataValues.MSSV}`,
                                 role_id: result.dataValues.role_id
                             });
                         });
                 } else {
                     res.json({
                         success: false,
-                        message: "tài khoản hoặc mật khẩu không đúng"
+                        message: "Tài khoản hoặc mật khẩu không đúng"
                     })
                 }
             })

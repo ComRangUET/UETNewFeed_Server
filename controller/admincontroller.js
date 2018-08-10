@@ -2,6 +2,97 @@ const account = require('../models/accountmodels');
 const register = require('../models/registermodels');
 const bcrypt = require('bcrypt');
 const rp = require('../models/roles-privileges-model');
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
+
+function getInforSchool(req, res){
+    const {major, class_name, course} = req.query;
+    if(!major){
+        try{
+            account.findAll({
+                attributes: [
+                    [Sequelize.fn('DISTINCT', Sequelize.col('major')) ,'major']
+                ],
+                
+            })
+            .then(function(result){
+                let listMajor = [];
+                result.forEach(function(i){
+                    listMajor.push(i.dataValues)
+                })
+                return res.json({
+                    success: true,
+                    data: listMajor
+                })
+            })
+        }
+        catch(err){
+            return res.json({
+                success: false,
+                data: null,
+                reason: err.message
+            })
+        }
+    }
+    else if(!course){
+        try{
+            account.findAll({
+                where:{
+                    major: major
+                },
+                attributes:[
+                    [Sequelize.fn('DISTINCT', Sequelize.col('course')), 'course']
+                ]
+            }).then(function(result){
+                let listMajor = [];
+                result.forEach(function(i){
+                    listMajor.push(i.dataValues);
+                })
+                return res.json({
+                    success: true,
+                    data: listMajor
+                })
+            })
+        }
+        catch(err){
+            return res.json({
+                success: false,
+                data: null,
+                reason: err.message
+            })
+        }
+    }
+    else{
+        try{
+            account.findAll({
+                where: {
+                    course: course,
+                    major: major
+                },
+                attributes: [
+                    [Sequelize.fn('DISTINCT', Sequelize.col('class_name')), 'class_name']
+                ]
+            })
+            .then(function(result){
+                let listClass = [];
+                result.forEach(function(i){
+                    listClass.push(i.dataValues)
+                })
+                return res.json({
+                    success: true, 
+                    data: listClass
+                })
+            })
+        }
+        catch(err){
+            return res.json({
+                success: false,
+                data: null,
+                reason: err.message
+            })
+        }
+    }
+}
 
 async function getStudents(req, res) {
     const { major, course, role_id } = req.query;
@@ -132,7 +223,7 @@ function deleteStudents(req, res) {
             })
             .then(function() {
                 let listSv = [];
-                table.account.findAll().then(function(result) {
+                account.findAll().then(function(result) {
                         result.forEach(function(i) {
                             listSv.push(i.dataValues);
                         })
@@ -146,7 +237,6 @@ function deleteStudents(req, res) {
             })
 
     } catch (err) {
-        console.log('error', err);
         return res.json({
             success: false,
             data: null,
@@ -157,15 +247,14 @@ function deleteStudents(req, res) {
 
 
 async function postStudents(req, res) {
-    const { role_id, user, MSSV, fullname, password } = req.body;
+    const { user, MSSV, fullname, password } = req.body;
 
     try {
-        if (!role_id || !user || !MSSV || !fullname || !password) throw new Error('role_id, user, MSSV are not required');
+        if (!user || !MSSV || !fullname || !password) throw new Error('user or MSSV or fullname or password are not required');
         let salt = await bcrypt.genSalt(5);
         let hashPassword = await bcrypt.hash(password, salt);
 
         account.create({
-                role_id: role_id,
                 user: user,
                 MSSV: MSSV,
                 fullname: fullname,
@@ -423,6 +512,53 @@ async function deletePrivilegesForRoles(req, res) {
     }
 }
 
+
+function addStudentToEvent(req, res){
+    
+    const {listSv, id_eve} = req.query;
+    let listId = [];
+    console.log(listSv);
+    console.log(id_eve);
+    account.findAll({
+        where: {   
+            MSSV: {[Op.in]:listSv}
+        },
+        attributes: ['id']
+    })
+    .then(function(result){
+        result.forEach(function(i){
+            listId.push(i.dataValues)
+        })
+        console.log(listId)
+        register.create({
+            id_eve: id_eve,
+            id_stu: {[Op.in]:listId}
+        })
+        .then(function(data){
+            return res.json({
+                success: true,
+                message: "Thêm thành công"
+            })
+        })
+        .catch(function(err){
+            return res.json({
+                success: false,
+                data: null,
+                reason: err.message
+            })
+        })
+    })
+    .catch(function(err){
+        return res.json({
+            success: false,
+            data: null,
+            reason: err.message
+        })
+    })
+
+    
+}
+
 module.exports = {
     getStudents,
     getStudent,
@@ -436,5 +572,7 @@ module.exports = {
     getPrivilegesForRoles,
     addPrivilegesForRoles,
     deletePrivilegesForRoles,
-    configStudentJoinEvent
+    configStudentJoinEvent,
+    getInforSchool,
+    addStudentToEvent
 }

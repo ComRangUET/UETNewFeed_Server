@@ -4,14 +4,13 @@ const news = require('../models/newsmodels');
 function getNewsList(req, res) {
     const { index } = req.query;
     try {
-        if(index < 1 )  throw new Error('index invalid');
         let listNews = [];
         news.findAll(
             {
             order: [
                 ['id_news', 'DESC']
             ],
-            offset: 8 * (index - 1 ),
+            offset: 8 * index,
             limit: 8,
             attributes: ['id_news', 'header', 'introduce_news', 'image']
         }).then(function (result) {
