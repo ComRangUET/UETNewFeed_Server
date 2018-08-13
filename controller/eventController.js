@@ -1,6 +1,8 @@
+
+
 const event = require('../models/eventmodels');
 const register = require('../models/registermodels');
-const  account = require('../models/accountmodels');
+const account = require('../models/accountmodels');
 
 
 function getEvents(req, res) {
@@ -37,12 +39,12 @@ function getEvents(req, res) {
 }
 
 function getEvent(req, res) {
-    const { id_event } = req.query;
+    const { id_eve } = req.params;
     try {
-        if (id_event == null) throw new Error("id_event invalid");
+        if (id_eve == null) throw new Error("id_event invalid");
         event.findOne({
             where: {
-                id_eve: id_event
+                id_eve: id_eve
             }
         }).then(function (result) {
 
@@ -123,23 +125,14 @@ function deleteEvents(req, res) {
             }
         })
             .then(function () {
-                let listEvent = [];
-                event.findAll().then(function (result) {
-                    result.forEach(function (i) {
-                        listEvent.push(i.dataValues);
-                    })
+                return res.json({
+                    success: true,
+                    data: null
                 })
-                    .then(function () {
-                        return res.json({
-                            success: true,
-                            data: listEvent
-                        })
-                    })
             })
 
     }
     catch (err) {
-        console.log('error', err);
         return res.json({
             success: false,
             data: null,
@@ -163,20 +156,13 @@ function postEvent(req, res) {
             image: image
         })
             .then(function (result) {
-                let listEvent = [];
-                event.findAll().then(function (result) {
-                    result.forEach(function (i) {
-                        listEvent.push(i.dataValues);
-                    })
+                res.json({
+                    success: true,
+                    data: null,
+                    id_eve: result.dataValues.id_eve
                 })
-                    .then(function () {
-                        res.json({
-                            success: true,
-                            data: listEvent,
-                            id_eve: result.dataValues.id_eve
-                        })
-                    })
             })
+
 
     }
     catch (err) {
@@ -196,7 +182,7 @@ function getListStuRegisterEvent(req, res) {
                     id_eve: req.params.id_eve
                 },
                 include: [
-                    {model: account, attributes: ['fullname', 'id'], required: true}
+                    { model: account, attributes: ['fullname', 'id'], required: true }
                 ],
             }).then(function (result) {
                 let listSv = [];

@@ -1,39 +1,73 @@
 const express = require('express');
 const router = express.Router();
-const adminController = require('../../controller/admincontroller')
+const bodyParser = require('body-parser');
+
+const adminController = require('../../controller/admincontroller');
+const admin = require('../../controller/privileges_rolesController');
+const classController = require('../../controller/class_nameController');
+const courseController = require('../../controller/courseController');
+const system = require('../../controller/class_systemController');
 const verifyPrivilege = require('../../middleware/verifyPrivileges');
 const verifyToken = require('../../middleware/verify-token');
 
 router.use(verifyToken.verifyToken);
 
-router.get('/work_with_students', verifyPrivilege('read_student_information'), adminController.getStudents);
+//Student
+router.get('/students', verifyPrivilege('read_data'), adminController.getStudents);
 
-router.get('/work_with_student', verifyPrivilege('read_student_information'), adminController.getStudent);
+router.get('/student/:MSSV', verifyPrivilege('read_data'), adminController.getStudent);
 
-router.put('/work_with_students/:id', verifyPrivilege('update_data'), adminController.putStudents);
+router.put('/students/:id', verifyPrivilege('update_data'), adminController.putStudents);
 
-router.delete('/work_with_students/:id', verifyPrivilege('delete_data'), adminController.deleteStudents);
+router.delete('/students/:id', verifyPrivilege('delete_data'), adminController.deleteStudents);
 
-router.post('/work_with_students', verifyPrivilege('add_user'), adminController.postStudents);
+router.post('/students', verifyPrivilege('add_user'), adminController.postStudents);
 
-router.get('/work_with_roles', verifyPrivilege('roles_privileges'), adminController.getRoles);
 
-router.post('/work_with_roles', verifyPrivilege('roles_privileges'), adminController.postRole);
+//Privilege and roles
+router.get('/roles', verifyPrivilege('roles_privileges'), admin.getRoles);
 
-router.delete('/work_with_roles', verifyPrivilege('roles_privileges'), adminController.deleteRole);
+router.post('/roles', verifyPrivilege('roles_privileges'), admin.postRole);
 
-router.get('/work_with_privileges', verifyPrivilege('roles_privileges'), adminController.getPrivileges);
+router.delete('/roles/:id_roles', verifyPrivilege('roles_privileges'), admin.deleteRole);
 
-router.get('/work_with_roles_privileges', verifyPrivilege('roles_privileges'), adminController.getPrivilegesForRoles);
+router.get('/privileges', verifyPrivilege('roles_privileges'), admin.getPrivileges);
 
-router.post('/work_with_roles_privileges', verifyPrivilege('roles_privileges'), adminController.addPrivilegesForRoles);
+router.get('/roles_privileges', verifyPrivilege('roles_privileges'), admin.getPrivilegesForRoles);
 
-router.delete('/work_with_roles_privileges', verifyPrivilege('roles_privileges'), adminController.deletePrivilegesForRoles)
+router.post('/roles_privileges', verifyPrivilege('roles_privileges'), admin.addPrivilegesForRoles);
+
+router.delete('/roles_privileges/:id_roles_privileges', verifyPrivilege('roles_privileges'), admin.deletePrivilegesForRoles);
+
+
+//class
+
+router.get('/class', classController.getListClass);
+
+router.put('/class/:id_class', classController.putClassName);
+
+router.post('/class', classController.postNewClass);
+
+router.delete('/class/:id_class', classController.deleteClass);
+
+
+//course
+
+router.get('/course', courseController.getCourse);
+
+router.put('/course/:id_course', courseController.putCourse);
+
+router.post('/course', courseController.postCourse);
+
+router.delete('/course/:id_course', courseController.deleteCourse);
+
+router.get('/get_list', system.getInforSchool);
 
 router.post('/config', verifyPrivilege('roles_privileges'), adminController.configStudentJoinEvent);
 
-router.get('/get_list', adminController.getInforSchool);
 
-router.post('/abc', adminController.addStudentToEvent);
+
+
+/* router.post('/abc', adminController.addStudentToEvent); */
 
 module.exports = router;

@@ -1,6 +1,9 @@
 const Sequelize = require('sequelize');
 
 const con = require('../config');
+const course = require('../models/coursemodels');
+const faculty = require('../models/facultymodels');
+const class_name = require('../models/class_namemodels');
 
 
 const account = con.define('account', {
@@ -25,18 +28,9 @@ const account = con.define('account', {
         unique: true,
         validate: { isEmail: { msg: "Email bạn nhập không hợp lệ." } }
     },
-    course: {
-        type: Sequelize.INTEGER
-    },
     fullname: {
         type: Sequelize.STRING,
         allowNull: false
-    },
-    major: {
-        type: Sequelize.STRING
-    },
-    class_name: {
-        type: Sequelize.DATE
     },
     phonenumber: {
         type: Sequelize.STRING,
@@ -52,14 +46,25 @@ const account = con.define('account', {
         allowNull: false,
         unique: true
     },
+    id_class: {
+        type: Sequelize.INTEGER
+    },
+    id_faculty: {
+        type: Sequelize.INTEGER
+    },
+    id_course: {
+        type: Sequelize.INTEGER
+    },
     token: {
         type: Sequelize.STRING
     }
-}, {
+},
+    {
         timestamps: false,
         freezeTableName: true
     });
 
-
-
+account.belongsTo(class_name, {foreignKey: 'id_class'});
+account.belongsTo(faculty, {foreignKey: 'id_faculty'});
+account.belongsTo(course, {foreignKey: 'id_course'});
 module.exports = account;
