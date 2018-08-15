@@ -12,4 +12,6 @@ const con = new Sequelize('qldv', 'root', '', {
     },
 });
 
+//con.sync();
+
 module.exports = con;

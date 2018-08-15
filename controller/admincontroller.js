@@ -1,10 +1,10 @@
 const Sequelize = require('sequelize');
 const bcrypt = require('bcrypt');
 
-const course = require('../models/coursemodels');
-const faculty = require('../models/facultymodels');
-const class_name = require('../models/class_namemodels');
-const account = require('../models/accountmodels');
+const courses = require('../models/coursemodels');
+
+const classes = require('../models/classesmodels');
+const accounts = require('../models/accountmodels');
 const register = require('../models/registermodels');
 
 
@@ -13,8 +13,8 @@ async function getStudents(req, res) {
 
     try {
         let listSv = [];
-        await account.findAll({
-            attributes: ['id', 'fullname', 'MSSV']
+        await accounts.findAll({
+            attributes: ['id', 'fullname', 'mssv']
         }
         ).then(function (result) {
             result.forEach(function (i) {
@@ -41,7 +41,6 @@ async function getStudents(req, res) {
             data: listSv
         });
     } catch (err) {
-        console.log('error', err);
         return res.json({
             success: false,
             data: null,
@@ -53,17 +52,19 @@ async function getStudents(req, res) {
 
 async function getStudent(req, res) {
     try {
-        await account.findOne({
+        await accounts.findOne({
             where: {
-                MSSV: req.params.MSSV
+                mssv: req.params.mssv
             },
             include: [
-                { model: course, attributes: ['course'], required: true },
-                { model: faculty, attributes: ['faculty'], required: true },
-                { model: class_name, attributes: ['class_name'], required: true }
+                { model: courses, attributes: ['name'], required: true },
+                { model: classes, attributes: ['name'], required: true }
             ],
-            attributes: ['id', 'role_id', 'user', 'password', 'email', 'phonenumber', 'fullname', 'MSSV']
+            attributes: ['id', 'role_id', 'user', 'password', 'email', 'phone_number', 'fullname', 'mssv']
         }).then(function (result) {
+            result.dataValues.course = result.dataValues.course.name;
+            result.dataValues.class = result.dataValues.class.name; 
+            console.log(result.dataValues.course.name);
             res.json({
                 success: true,
                 data: result.dataValues
@@ -81,13 +82,13 @@ async function getStudent(req, res) {
 
 
 async function putStudents(req, res) {
-    const { email, MSSV, id_faculty, id_class, id_course, fullname, phonenumber } = req.body;
+    const { email, mssv, faculty, id_class, id_course, fullname, phone_number } = req.body;
     try {
-        await account.update({
+        await accounts.update({
             email: email,
-            MSSV: MSSV,
-            id_faculty: id_faculty,
-            phonenumber: phonenumber,
+            mssv: mssv,
+            faculty: faculty,
+            phone_number: phone_number,
             id_class: id_class,
             id_course: id_course,
             fullname: fullname
@@ -120,7 +121,7 @@ function deleteStudents(req, res) {
             }
         });
 
-        account.destroy({
+        accounts.destroy({
             where: {
                 id: req.params.id
             }
@@ -142,26 +143,33 @@ function deleteStudents(req, res) {
 
 
 async function postStudents(req, res) {
-    const { user, MSSV, fullname, password , id_class, id_course, id_faculty} = req.body;
+    const { user, mssv, fullname, password , id_class, id_course, faculty} = req.body;
 
     try {
-        if (!user || !MSSV || !fullname || !password) throw new Error('user or MSSV or fullname or password are not required');
+        if (!user || !mssv || !fullname || !password) throw new Error('user or mssv or fullname or password are not required');
         let salt = await bcrypt.genSalt(5);
         let hashPassword = await bcrypt.hash(password, salt);
 
-        account.create({
+        accounts.create({
             user: user,
-            MSSV: MSSV,
+            mssv: mssv,
             fullname: fullname,
             password: hashPassword,
             id_class: id_class, 
             id_course: id_course,
-            id_faculty: id_faculty
+            faculty: faculty
         })
             .then(function () {
                 res.json({
                     success: true,
                     data: null
+                })
+            })
+            .catch(function(err){
+                return res.json({
+                    success: false,
+                    data: null,
+                    message: err.message
                 })
             })
 
@@ -176,10 +184,10 @@ async function postStudents(req, res) {
 
 
 function configStudentJoinEvent(req, res) {
-    const { MSSV, id_eve } = req.body;
-    account.findOne({
+    const { mssv, id_eve } = req.body;
+    accounts.findOne({
         where: {
-            MSSV: MSSV
+            mssv: mssv
         }
     })
         .then(function (student) {
@@ -198,7 +206,7 @@ function configStudentJoinEvent(req, res) {
                             joined: 1
                         })
                             .then(function () {
-                                account.findOne({
+                                accounts.findOne({
                                     where: {
                                         id: id_stu
                                     },
@@ -214,7 +222,7 @@ function configStudentJoinEvent(req, res) {
                             })
                     } else {
                         if (result.dataValues.joined == 1) {
-                            account.findOne({
+                            accounts.findOne({
                                 where: {
                                     id: id_stu
                                 },

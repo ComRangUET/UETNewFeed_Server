@@ -1,24 +1,23 @@
-const account = require('../models/accountmodels');
+const accounts = require('../models/accountmodels');
 const register = require('../models/registermodels');
-const course = require('../models/coursemodels');
-const faculty = require('../models/facultymodels');
-const class_name = require('../models/class_namemodels');
+const courses = require('../models/coursemodels');
+const classes = require('../models/classesmodels');
 
 
 function getStudent(req, res) {
     try {
-        console.log(req.tokenData.idaccount);
-        account.findOne({
+        accounts.findOne({
             where: {
                 id: req.tokenData.idaccount
             },
             include: [
-                {model: course, attributes: ['course'], required: true},
-                {model: faculty, attributes: ['faculty'], required: true},
-                {model: class_name, attributes: ['class_name'], required: true}
+                {model: courses, attributes: ['name'], required: true},
+                {model: classes, attributes: ['name'], required: true}
             ],
-            attributes: ['email', 'phonenumber', 'fullname', 'MSSV']
+            attributes: ['email', 'phone_number', 'fullname', 'mssv', 'faculty']
         }).then(function (result) {
+            result.dataValues.course = result.dataValues.course.name;
+            result.dataValues.class = result.dataValues.class.name;
             return res.json({
                 success: true,
                 data: result.dataValues
@@ -42,27 +41,21 @@ function getStudent(req, res) {
 }
 
 function putStudent(req, res) {
-    const {email, phonenumber } = req.body;
+    const {email, phone_number } = req.body;
 
     try {
-        account.update({
+        accounts.update({
             email: email,
-            phonenumber: phonenumber
+            phone_number: phone_number
         },
             {
                 where: {
                     id: req.tokenData.idaccount
                 }
             }).then(function () {
-                account.findOne({
-                    where: {
-                        id: req.tokenData.idaccount
-                    }
-                }).then(function (result) {
-                    return res.json({
-                        success: true,
-                        data: null
-                    })
+                return res.json({
+                    success: true,
+                    data: null
                 })
             })
             .catch(function(err){
@@ -91,6 +84,7 @@ function studentRegisterEvent(req, res) {
         }).then(function(){
             return res.json({
                 success: true,
+                data: null
             })
         })
     }

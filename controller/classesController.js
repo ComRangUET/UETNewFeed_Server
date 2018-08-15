@@ -1,12 +1,12 @@
 const Sequelize = require('sequelize');
 
 
-const classController = require('../models/class_namemodels');
+const classesController = require('../models/classesmodels');
 
 function getListClass(req, res){
     try{
         let listClass = [];
-        classController.findAll().then(function(result){
+        classesController.findAll().then(function(result){
             result.forEach(function(i){
                 listClass.push(i.dataValues);
             })
@@ -29,13 +29,11 @@ function putClassName(req, res){
     const {newClass} = req.body;
     const {id_class} = req.params;
     try{
-        console.log(newClass);
-        console.log(id_class);
-        classController.update({
-            class_name: newClass
+        classesController.update({
+            name: newClass
         },{
             where: {
-                id_class: id_class
+                id: id_class
             }
         }).then(function(result){
             res.json({
@@ -56,8 +54,8 @@ function putClassName(req, res){
 function postNewClass(req, res){
     const {newClass} = req.body;
     try{
-        classController.create({
-            class_name: newClass
+        classesController.create({
+            name: newClass
         }).then(function(result){
             res.json({
                 success: true,
@@ -77,9 +75,9 @@ function postNewClass(req, res){
 function deleteClass(req, res){
     const {id_class} = req.params;
     try{
-        classController.destroy({
+        classesController.destroy({
             where: {
-                id_class: id_class
+                id: id_class
             }
         }).then(function(result){
             res.json({

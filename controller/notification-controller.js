@@ -3,7 +3,7 @@ const rp = require('request-promise');
 
 async function putToken(req, res) {
     try {
-        account.update({ token: req.body.token }, {
+        accounts.update({ token: req.body.token }, {
                 where: { id: req.tokenData.idaccount }
             })
             .then(() => {
@@ -23,7 +23,7 @@ async function putToken(req, res) {
 
 async function sendNotification(req, res) {
     try {
-        await account.findAll()
+        await accounts.findAll()
             .then((result) => {
 
                 result.forEach(i => {

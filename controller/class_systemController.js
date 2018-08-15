@@ -2,16 +2,16 @@ const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
 
-const course = require('../models/coursemodels');
-const account = require('../models/accountmodels');
-const className = require('../models/class_namemodels');
+const courses = require('../models/coursemodels');
+const accounts = require('../models/accountmodels');
+const classes = require('../models/classesmodels');
 
 function getInforSchool(req, res){
     const {id_course} = req.query;
 
     try{
         if(!id_course){
-            course.findAll().then(function(result){
+            courses.findAll().then(function(result){
                 let listCourse = [];
                 result.forEach(function(i){
                     listCourse.push(i.dataValues);
@@ -23,9 +23,9 @@ function getInforSchool(req, res){
             })
         }
         else {
-            account.findAll({
+            accounts.findAll({
                 where: {
-                    id_course: id_course
+                    id: id_course
                 },
                 attributes: [
                     [Sequelize.fn('DISTINCT', Sequelize.col('id_class')), 'id_class']
@@ -37,9 +37,9 @@ function getInforSchool(req, res){
                     listClass.push(i.dataValues.id_class);
                 });
                 console.log(listClass);
-                className.findAll({
+                classes.findAll({
                     where: {
-                        id_class: {
+                        id: {
                             [Op.in] : listClass
                         }
                     }

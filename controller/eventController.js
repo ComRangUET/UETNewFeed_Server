@@ -1,21 +1,21 @@
 
 
-const event = require('../models/eventmodels');
+const events = require('../models/eventmodels');
 const register = require('../models/registermodels');
-const account = require('../models/accountmodels');
+const accounts = require('../models/accountmodels');
 
 
 function getEvents(req, res) {
     const { index } = req.query;
     try {
         let listEvent = [];
-        event.findAll({
+        events.findAll({
             order: [
-                ['id_eve', 'DESC']
+                ['id', 'DESC']
             ],
             offset: 8 * index,
             limit: 8,
-            attributes: ['id_eve', 'header', 'image', 'place', 'time_start']
+            attributes: ['id', 'header', 'image', 'place', 'time_start']
         }).then(function (result) {
             result.forEach(function (i) {
                 listEvent.push(i.dataValues);
@@ -29,7 +29,6 @@ function getEvents(req, res) {
             })
     }
     catch (err) {
-        console.log('error: ', err);
         return res.json({
             success: false,
             data: null,
@@ -42,9 +41,9 @@ function getEvent(req, res) {
     const { id_eve } = req.params;
     try {
         if (id_eve == null) throw new Error("id_event invalid");
-        event.findOne({
+        events.findOne({
             where: {
-                id_eve: id_eve
+                id: id_eve
             }
         }).then(function (result) {
 
@@ -75,7 +74,7 @@ async function putEvents(req, res) {
 
     try {
         if (!header || !content || !place || !time_start) throw new Error('Header or content or place or time_start or event_type are not require');
-        await event.update({
+        await events.update({
             header: header,
             content: content,
             image: image,
@@ -85,19 +84,19 @@ async function putEvents(req, res) {
         },
             {
                 where: {
-                    id_eve: req.params.id_eve
+                    id: req.params.id_eve
                 }
             })
             .then(async function () {
-                await event.findOne({
+                await events.findOne({
                     where: {
-                        id_eve: req.params.id_eve
+                        id: req.params.id_eve
                     }
                 })
                     .then(function (result) {
                         return res.json({
                             success: true,
-                            data: result.dataValues
+                            data:null
                         })
                     })
             })
@@ -119,9 +118,9 @@ function deleteEvents(req, res) {
             }
         });
 
-        event.destroy({
+        events.destroy({
             where: {
-                id_eve: req.params.id_eve
+                id: req.params.id_eve
             }
         })
             .then(function () {
@@ -147,7 +146,7 @@ function postEvent(req, res) {
     try {
         if (!header || !content || !place || !time_start) throw new Error('header or conntent or place or time_start aren not require');
 
-        event.create({
+        events.create({
             header: header,
             content: content,
             place: place,
@@ -182,7 +181,7 @@ function getListStuRegisterEvent(req, res) {
                     id_eve: req.params.id_eve
                 },
                 include: [
-                    { model: account, attributes: ['fullname', 'id'], required: true }
+                    { model: accounts, attributes: ['fullname'], required: true }
                 ],
             }).then(function (result) {
                 let listSv = [];
@@ -196,7 +195,6 @@ function getListStuRegisterEvent(req, res) {
             })
     }
     catch (err) {
-        console.log(err);
         res.json({
             success: false,
             data: null,
@@ -207,14 +205,14 @@ function getListStuRegisterEvent(req, res) {
 
 function getListEventsNeedConfig(req, res) {
     try {
-        event.findAll({
+        events.findAll({
             where: {
                 event_type: 1
             },
             order: [
-                ['id_eve', 'DESC']
+                ['id', 'DESC']
             ],
-            attributes: ['header', 'id_eve'],
+            attributes: ['header', 'id'],
         }).then(function (result) {
             let listEvent = [];
             result.forEach(function (e) {
@@ -255,7 +253,6 @@ function getStudentsJoinEvent(req, res) {
                 })
             })
             .catch(function (err) {
-                console.log(err);
                 return res.json({
                     success: true,
                     data: null,
@@ -264,7 +261,6 @@ function getStudentsJoinEvent(req, res) {
             })
     }
     catch (err) {
-        console.log(err);
         return res.json({
             success: true,
             data: null,
