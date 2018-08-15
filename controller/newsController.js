@@ -10,11 +10,11 @@ function getNewsList(req, res) {
         news.findAll(
             {
             order: [
-                ['id_news', 'DESC']
+                ['id', 'DESC']
             ],
             offset: 8 * index,
             limit: 8,
-            attributes: ['id_news', 'header', 'introduce_news', 'image']
+            attributes: ['id', 'header', 'introduce', 'image']
         }).then(function (result) {
             result.forEach(function (i) {
                 listNews.push(i.dataValues);
@@ -27,7 +27,6 @@ function getNewsList(req, res) {
         })
     }
     catch (err) {
-        console.log('Error', err);
         res.json({
             success: false,
             data: null,
@@ -37,12 +36,12 @@ function getNewsList(req, res) {
 }
 
 function getNews(req, res) {
-    const {id_news} = req.query;
+    const {id_news} = req.params;
     try {
         news.findOne(
             {
             where: {
-                id_news: id_news
+                id: id_news
             },
             attributes: ['header', 'content', 'image']
         }
@@ -60,7 +59,6 @@ function getNews(req, res) {
         })
     }
     catch (err) {
-        console.log('Error', err);
         res.json({
             success: false,
             data: null,

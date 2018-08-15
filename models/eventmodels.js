@@ -4,12 +4,7 @@ const Sequelize = require('sequelize');
 const con = require('../config');
 
 
-const event = con.define('event', {
-    id_eve: {
-        type: Sequelize.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-    },
+const events = con.define('events', {
     header: {
         type: Sequelize.TEXT
     },
@@ -38,4 +33,4 @@ const event = con.define('event', {
     }
 );
 
-module.exports = event;
+module.exports = events;

@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const account = require('../models/accountmodels');
+const accounts = require('../models/accountmodels');
 const rp = require('../models/roles-privileges-model')
 
 
@@ -15,7 +15,7 @@ async function login(req, res) {
     }
 
     try {
-        await account.findOne({
+        await accounts.findOne({
             where: {
                 user: user
             }
@@ -27,7 +27,7 @@ async function login(req, res) {
                         where: { id: result.role_id }
                     })
                         .then(rows => {
-                            const token = jwt.sign({ idaccount: result.dataValues.id, role_id: result.dataValues.role_id }, process.env.SECRET_KEY, {
+                            const token = jwt.sign({ idaccounts: result.dataValues.id, role_id: result.dataValues.role_id }, process.env.SECRET_KEY, {
                                 expiresIn: 5000000
                             });
                             res.json({
@@ -68,7 +68,7 @@ async function changePasword(req, res, next) {
     let salt = await bcrypt.genSalt(5);
     let hashPassword = await bcrypt.hash(newPassword, salt);
     try {
-        await account.findOne({
+        await accounts.findOne({
             where: {
                 id: req.tokenData.idaccount
             }
@@ -76,7 +76,7 @@ async function changePasword(req, res, next) {
             .then(async (result) => {
                 const pw = await bcrypt.compare(password, result.password);
                 if (pw) {
-                    await account.update({
+                    await accounts.update({
                         password: hashPassword
                     }, {
                             where: { id: req.tokenData.idaccount }

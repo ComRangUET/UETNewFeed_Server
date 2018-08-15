@@ -1,6 +1,6 @@
 const sequelize = require('sequelize');
 const con = require('../config');
-const account = require('./accountmodels');
+const accounts = require('./accountmodels');
 
 const roles = con.define('roles', {
     id: {
@@ -54,7 +54,7 @@ const roles_privileges = con.define('roles_privileges', {
 });
 roles_privileges.belongsTo(roles, { foreignKey: 'role_id' });
 roles_privileges.belongsTo(privileges, { foreignKey: 'privileges_id' });
-account.belongsTo(roles, { foreignKey: 'role_id' });
+accounts.belongsTo(roles, { foreignKey: 'role_id' });
 
 module.exports = {
     roles,

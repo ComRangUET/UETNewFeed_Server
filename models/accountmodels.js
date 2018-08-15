@@ -1,12 +1,11 @@
 const Sequelize = require('sequelize');
 
 const con = require('../config');
-const course = require('../models/coursemodels');
-const faculty = require('../models/facultymodels');
-const class_name = require('../models/class_namemodels');
+const courses = require('../models/coursemodels');
+const classes = require('../models/classesmodels');
 
 
-const account = con.define('account', {
+const accounts = con.define('account', {
     role_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -32,7 +31,7 @@ const account = con.define('account', {
         type: Sequelize.STRING,
         allowNull: false
     },
-    phonenumber: {
+    phone_number: {
         type: Sequelize.STRING,
         allowNull: true,
         unique: true,
@@ -41,7 +40,7 @@ const account = con.define('account', {
             isNumeric: { msg: "Số điện thoại bạn nhập không hợp lệ." }
         }
     },
-    MSSV: {
+    mssv: {
         type: Sequelize.STRING,
         allowNull: false,
         unique: true
@@ -49,22 +48,25 @@ const account = con.define('account', {
     id_class: {
         type: Sequelize.INTEGER
     },
-    id_faculty: {
-        type: Sequelize.INTEGER
+    faculty: {
+        type: Sequelize.STRING
     },
     id_course: {
         type: Sequelize.INTEGER
     },
     token: {
         type: Sequelize.STRING
+    },
+    avatar: {
+        type: Sequelize.STRING
     }
 },
     {
         timestamps: false,
-        freezeTableName: true
     });
 
-account.belongsTo(class_name, {foreignKey: 'id_class'});
-account.belongsTo(faculty, {foreignKey: 'id_faculty'});
-account.belongsTo(course, {foreignKey: 'id_course'});
-module.exports = account;
+ accounts.belongsTo(classes, { foreignKey: 'id_class' });
+
+accounts.belongsTo(courses, { foreignKey: 'id_course' }); 
+
+module.exports = accounts;

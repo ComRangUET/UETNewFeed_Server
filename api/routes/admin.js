@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 
 const adminController = require('../../controller/admincontroller');
 const admin = require('../../controller/privileges_rolesController');
-const classController = require('../../controller/class_nameController');
+const classController = require('../../controller/classesController');
 const courseController = require('../../controller/courseController');
 const system = require('../../controller/class_systemController');
 const verifyPrivilege = require('../../middleware/verifyPrivileges');
@@ -15,7 +15,7 @@ router.use(verifyToken.verifyToken);
 //Student
 router.get('/students', verifyPrivilege('read_data'), adminController.getStudents);
 
-router.get('/student/:MSSV', verifyPrivilege('read_data'), adminController.getStudent);
+router.get('/student/:mssv', verifyPrivilege('read_data'), adminController.getStudent);
 
 router.put('/students/:id', verifyPrivilege('update_data'), adminController.putStudents);
 
@@ -60,6 +60,7 @@ router.put('/course/:id_course', courseController.putCourse);
 router.post('/course', courseController.postCourse);
 
 router.delete('/course/:id_course', courseController.deleteCourse);
+
 
 router.get('/get_list', system.getInforSchool);
 

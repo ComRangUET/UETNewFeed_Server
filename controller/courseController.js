@@ -1,11 +1,11 @@
 const Sequelize = require('sequelize');
 
 
-const course = require('../models/coursemodels');
+const courses = require('../models/coursemodels');
 
 function getCourse(req, res) {
     try {
-        course.findAll().then(function (result) {
+        courses.findAll().then(function (result) {
             let listCourse = [];
             result.forEach(function (i) {
                 listCourse.push(i.dataValues);
@@ -29,15 +29,13 @@ function getCourse(req, res) {
 function putCourse(req, res) {
     const { id_course } = req.params;
     const { newCourse } = req.body;
-    console.log(id_course);
-    console.log(newCourse);
     try {
-        course.update({
-            course: newCourse
+        courses.update({
+            name: newCourse
         },
             {
                 where: {
-                    id_course: id_course
+                    id: id_course
                 }
             })
             .then(function(result){
@@ -59,8 +57,8 @@ function putCourse(req, res) {
 function postCourse(req, res){
     const {newCourse} = req.body;
     try{
-        course.create({
-            course: newCourse
+        courses.create({
+            name: newCourse
         })
         .then(function(result){
             res.json({
@@ -81,9 +79,9 @@ function postCourse(req, res){
 function deleteCourse(req, res){
     const {id_course} = req.params;
     try{
-        course.destroy({
+        courses.destroy({
             where: {
-                id_course: id_course
+                id: id_course
             }
         }).then(function(result){
             res.json({
