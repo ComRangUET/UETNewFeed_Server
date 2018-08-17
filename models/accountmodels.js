@@ -27,7 +27,7 @@ const accounts = con.define('account', {
         unique: true,
         validate: { isEmail: { msg: "Email bạn nhập không hợp lệ." } }
     },
-    fullname: {
+    full_name: {
         type: Sequelize.STRING,
         allowNull: false
     },

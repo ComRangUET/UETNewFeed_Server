@@ -5,16 +5,17 @@ const classes = require('../models/classesmodels');
 
 
 function getStudent(req, res) {
+    console.log(req.tokenData.idaccounts);
     try {
         accounts.findOne({
             where: {
-                id: req.tokenData.idaccount
+                id: req.tokenData.idaccounts
             },
             include: [
                 {model: courses, attributes: ['name'], required: true},
                 {model: classes, attributes: ['name'], required: true}
             ],
-            attributes: ['email', 'phone_number', 'fullname', 'mssv', 'faculty']
+            attributes: ['email', 'phone_number', 'full_name', 'mssv', 'faculty']
         }).then(function (result) {
             result.dataValues.course = result.dataValues.course.name;
             result.dataValues.class = result.dataValues.class.name;

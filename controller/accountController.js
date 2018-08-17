@@ -34,7 +34,7 @@ async function login(req, res) {
                                 success: true,
                                 data: null,
                                 accessToken: token,
-                                MSSV: `${result.dataValues.MSSV}`,
+                                mssv: `${result.dataValues.mssv}`,
                                 role_id: result.dataValues.role_id
                             });
                         });

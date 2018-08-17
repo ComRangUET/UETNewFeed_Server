@@ -20,10 +20,21 @@ function getNewsList(req, res) {
                 listNews.push(i.dataValues);
             })
         }).then(function () {
-            return res.json({
-                success: true,
-                data: listNews
-            })
+            if(listNews == "")
+            {
+                return res.json({
+                    success: true,
+                    data: null,
+                    end: true
+                })
+            }
+            else{
+                return res.json({
+                    success: true,
+                    data: listNews,
+                    end: false
+                })
+            }
         })
     }
     catch (err) {

@@ -22,10 +22,21 @@ function getEvents(req, res) {
             })
         })
             .then(function () {
-                return res.json({
-                    success: true,
-                    data: listEvent
-                })
+                if(listEvent == "")
+                {
+                    return res.json({
+                        success: true,
+                        end: true,
+                        data: null
+                    })
+                } else{
+                    return res.json({
+                        success: true,
+                        data: listEvent,
+                        end: false
+                    })
+                }
+                
             })
     }
     catch (err) {
@@ -45,20 +56,21 @@ function getEvent(req, res) {
             where: {
                 id: id_eve
             }
-        }).then(function (result) {
+        })
+        .then(function (result) {
 
             return res.json({
                 success: true,
                 data: result.dataValues
             })
         })
-            .catch(function (err) {
-                return res.json({
-                    success: false,
-                    data: null,
-                    reason: err.message
-                })
+        .catch(function (err) {
+            return res.json({
+                success: false,
+                data: null,
+                reason: err.message
             })
+        })
     }
     catch (err) {
         res.json({
@@ -181,7 +193,7 @@ function getListStuRegisterEvent(req, res) {
                     id_eve: req.params.id_eve
                 },
                 include: [
-                    { model: accounts, attributes: ['fullname'], required: true }
+                    { model: accounts, attributes: ['full_name'], required: true }
                 ],
             }).then(function (result) {
                 let listSv = [];
