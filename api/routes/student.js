@@ -12,6 +12,4 @@ router.put('/', student.putStudent);
 
 router.post('/', student.studentRegisterEvent);
 
-router.delete('/', student.studentCanleRegister);
-
 module.exports = router;

@@ -67,8 +67,6 @@ router.get('/get_list', system.getInforSchool);
 router.post('/config', verifyPrivilege('roles_privileges'), adminController.configStudentJoinEvent);
 
 
-
-
-/* router.post('/abc', adminController.addStudentToEvent); */
+router.post('/student_event', adminController.addStudentToEvent); 
 
 module.exports = router;

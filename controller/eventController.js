@@ -51,7 +51,6 @@ function getEvents(req, res) {
 function getEvent(req, res) {
     const { id_eve } = req.params;
     try {
-        if (id_eve == null) throw new Error("id_event invalid");
         events.findOne({
             where: {
                 id: id_eve
@@ -99,18 +98,11 @@ async function putEvents(req, res) {
                     id: req.params.id_eve
                 }
             })
-            .then(async function () {
-                await events.findOne({
-                    where: {
-                        id: req.params.id_eve
-                    }
+            .then(function () {
+                return res.json({
+                    success: true,
+                    data: req.params.id_eve
                 })
-                    .then(function (result) {
-                        return res.json({
-                            success: true,
-                            data:null
-                        })
-                    })
             })
     }
     catch (err) {
@@ -153,7 +145,7 @@ function deleteEvents(req, res) {
 }
 
 function postEvent(req, res) {
-    const { header, content, image, place, time_start, event_type } = req.body;
+    const { header, content, introduce, image, place, time_start, event_type } = req.body;
 
     try {
         if (!header || !content || !place || !time_start) throw new Error('header or conntent or place or time_start aren not require');
@@ -164,13 +156,13 @@ function postEvent(req, res) {
             place: place,
             time_start: time_start,
             event_type: event_type,
-            image: image
+            image: image,
+            introduce: introduce
         })
             .then(function (result) {
                 res.json({
                     success: true,
-                    data: null,
-                    id_eve: result.dataValues.id_eve
+                    data: result.dataValues.id,
                 })
             })
 

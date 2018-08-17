@@ -42,16 +42,17 @@ function getStudent(req, res) {
 }
 
 function putStudent(req, res) {
-    const {email, phone_number } = req.body;
+    const {email, phone_number, avatar } = req.body;
 
     try {
         accounts.update({
             email: email,
-            phone_number: phone_number
+            phone_number: phone_number,
+            avatar: avatar
         },
             {
                 where: {
-                    id: req.tokenData.idaccount
+                    id: req.tokenData.idaccounts
                 }
             }).then(function () {
                 return res.json({
@@ -78,47 +79,46 @@ function putStudent(req, res) {
 
 function studentRegisterEvent(req, res) {
     const {id_eve} = req.body;
-    try{
-        register.create({
-            id_eve: id_eve,
-            id_stu: req.tokenData.idaccount
-        }).then(function(){
-            return res.json({
-                success: true,
-                data: null
-            })
-        })
-    }
-    catch(err){
-        res.json({
-            success: false,
-            data: null,
-            reason: err.message
-        })
-    }
-}
-
-function studentCanleRegister(req, res){
-    const {id_eve} = req.body;
 
     try{
-        register.destroy({
+        register.findOne({
             where: {
-                id_eve: id_eve,
-                id_stu: req.tokenData.idaccount
+                id_stu: req.tokenData.idaccounts,
+                id_eve: id_eve
             }
-        }).then(function(){
-            res.json({
-                success: true,
-                data: null
-            })
+        })
+        .then(function(result){
+            if(result==null){
+                register.create({
+                    id_eve: id_eve,
+                    id_stu: req.tokenData.idaccounts
+                }).then(function(){
+                    return res.json({
+                        success: true,
+                        data: null,
+                        message: "Dang ki thanh cong"
+                    })
+                })
+            }
+            else{
+                register.destroy({
+                    where: {
+                        id_eve: id_eve,
+                        id_stu: req.tokenData.idaccounts
+                    }
+                }).then(function(){
+                    res.json({
+                        success: true,
+                        data: null,
+                        message: "Huy dang ki thanh cong"
+                    })
+                })
+            }
         })
     }
     catch(err){
         res.json({
-            success: false,
-            data: null,
-            reason: err.message
+            success: false
         })
     }
 }
@@ -127,5 +127,4 @@ module.exports = {
     getStudent, 
     putStudent,
     studentRegisterEvent,
-    studentCanleRegister
 }

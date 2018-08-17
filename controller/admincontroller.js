@@ -60,7 +60,7 @@ async function getStudent(req, res) {
                 { model: courses, attributes: ['name'], required: true },
                 { model: classes, attributes: ['name'], required: true }
             ],
-            attributes: ['id', 'role_id', 'user', 'password', 'email', 'phone_number', 'full_name', 'mssv']
+            attributes: ['id', 'role_id', 'user', 'password', 'email', 'phone_number', 'full_name', 'mssv', 'id_class', 'id_course', 'faculty']
         }).then(function (result) {
             result.dataValues.course = result.dataValues.course.name;
             result.dataValues.class = result.dataValues.class.name; 
@@ -273,51 +273,99 @@ function configStudentJoinEvent(req, res) {
 
 
 
-/* function addStudentToEvent(req, res){
-    
-    const {listSv, id_eve} = req.query;
-    let listId = [];
-    console.log(listSv);
-    console.log(id_eve);
-    account.findAll({
-        where: {   
-            MSSV: {[Op.in]:listSv}
-        },
-        attributes: ['id']
-    })
-    .then(function(result){
-        result.forEach(function(i){
-            listId.push(i.dataValues)
-        })
-        console.log(listId)
-        register.create({
-            id_eve: id_eve,
-            id_stu: {[Op.in]:listId}
-        })
-        .then(function(data){
-            return res.json({
-                success: true,
-                message: "Thêm thành công"
+function addStudentToEvent(req, res){
+    const {mssv, id_eve} = req.body;
+    try{
+        accounts.findOne({
+            where: {
+                mssv: mssv
+            },
+            attributes: ['id']
+        }).then(function(result){
+            register.findOne({
+                where: {
+                    id_stu: result.dataValues.id,
+                    id_eve: id_eve,
+                }
+            })
+            .then(function(data){
+                if(data==null){
+                    console.log('abc');
+                    register.create({
+                        id_stu: result.dataValues.id,
+                        id_eve: id_eve,
+                        default_student: 1
+                    })
+                    .then(function(err){
+                     return res.json({
+                            success: true,
+                            data: null
+                        })
+                    })
+                }
+                else if(data.dataValues.default_student==0)
+                {
+                    register.update({
+                        default_student: 1
+                    },
+                    {
+                        where: {
+                            id_stu: result.dataValues.id,
+                            id_eve: id_eve
+                        }
+                    })
+                    .then(function(){
+                        return res.json({
+                            success: true,
+                            data: null
+                        })
+                    })
+                }
+                else 
+                    {
+                        return res.json({
+                            success: false,
+                            data: null,
+                            message: "Sinh vien da co trong danh sach"
+                        })
+                    }
+            
             })
         })
-        .catch(function(err){
-            return res.json({
-                success: false,
-                data: null,
-                reason: err.message
-            })
-        })
-    })
-    .catch(function(err){
+    }
+    catch(err){
         return res.json({
             success: false,
             data: null,
             reason: err.message
         })
-    })
+    }
+} 
 
-    
-} */
+function getImageStudent(req, res){
+    const {mssv} = req.params;
+
+    try{
+        accounts.findOne({
+            where: {
+                mssv: mssv
+            },
+            attributes: ['image']
+        }).then(function(result){
+            return res.json({
+                success: true,
+                data: result.image
+            })
+        })
+    }
+    catch(err){
+        return res.json({
+            success: false,
+            data: null,
+            reason: err.message
+        })
+    }
+}
 
 module.exports = {
     getStudents,
@@ -326,5 +374,5 @@ module.exports = {
     deleteStudents,
     postStudents,
     configStudentJoinEvent,
-    //addStudentToEvent
+    addStudentToEvent
 }
