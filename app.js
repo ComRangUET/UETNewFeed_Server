@@ -28,12 +28,6 @@ app.use('/api/', image);
 app.use('/api', account);
 app.use('/api/student', student);
 app.use('/api/notification', notification);
-/* app.use('/', function(req, res){
-    res.send('Welcome to home page');
-}) */
-
-
-
 app.use((req, res, next) => {
     const err = new Error('Not found');
     res.status(404).json({

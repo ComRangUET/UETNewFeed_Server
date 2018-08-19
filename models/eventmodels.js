@@ -25,6 +25,10 @@ const events = con.define('events', {
     },
     introduce: {
         type: Sequelize.STRING
+    },
+    link_register: {
+        type: Sequelize.STRING,
+        allowNull: true
     }
 },
     {

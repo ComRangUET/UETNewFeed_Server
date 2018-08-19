@@ -12,4 +12,6 @@ router.put('/', student.putStudent);
 
 router.post('/', student.studentRegisterEvent);
 
+router.get('/events', student.getEvent);
+
 module.exports = router;

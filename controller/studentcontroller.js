@@ -2,14 +2,16 @@ const accounts = require('../models/accountmodels');
 const register = require('../models/registermodels');
 const courses = require('../models/coursemodels');
 const classes = require('../models/classesmodels');
+const interested = require('../models/interestedmodels');
+const events = require('../models/eventmodels');
+
 
 
 function getStudent(req, res) {
-    console.log(req.tokenData.idaccounts);
     try {
         accounts.findOne({
             where: {
-                id: req.tokenData.idaccounts
+                id: req.tokenData.idaccount
             },
             include: [
                 {model: courses, attributes: ['name'], required: true},
@@ -52,7 +54,7 @@ function putStudent(req, res) {
         },
             {
                 where: {
-                    id: req.tokenData.idaccounts
+                    id: req.tokenData.idaccount
                 }
             }).then(function () {
                 return res.json({
@@ -81,36 +83,36 @@ function studentRegisterEvent(req, res) {
     const {id_eve} = req.body;
 
     try{
-        register.findOne({
+        interested.findOne({
             where: {
-                id_stu: req.tokenData.idaccounts,
+                id_stu: req.tokenData.idaccount,
                 id_eve: id_eve
             }
         })
         .then(function(result){
             if(result==null){
-                register.create({
+                interested.create({
                     id_eve: id_eve,
-                    id_stu: req.tokenData.idaccounts
+                    id_stu: req.tokenData.idaccount
                 }).then(function(){
                     return res.json({
                         success: true,
                         data: null,
-                        message: "Dang ki thanh cong"
+                        message: "Quan tâm thành công"
                     })
                 })
             }
             else{
-                register.destroy({
+                interested.destroy({
                     where: {
                         id_eve: id_eve,
-                        id_stu: req.tokenData.idaccounts
+                        id_stu: req.tokenData.idaccount
                     }
                 }).then(function(){
                     res.json({
                         success: true,
                         data: null,
-                        message: "Huy dang ki thanh cong"
+                        message: "Bỏ quan tâm thành công"
                     })
                 })
             }
@@ -123,8 +125,39 @@ function studentRegisterEvent(req, res) {
     }
 }
 
+function getEvent(req, res){
+    try{
+        register.findAll({
+            where: {
+                id_stu: req.tokenData.idaccount,
+                joined: 1
+            },
+            include: [{model: events, attributes: ['header', 'time_start'], required: true}],
+            attributes: []
+        })
+        .then(function(result){
+            let listEvent = [];
+            result.forEach(function(i){
+                listEvent.push(i.dataValues);
+            })
+            return res.json({
+                success: true,
+                data: listEvent
+            })
+        })
+    }
+    catch(err){
+        return res.json({
+            success: false,
+            data: null,
+            reason: err.message
+        })
+    }
+}
+
 module.exports = {
     getStudent, 
     putStudent,
     studentRegisterEvent,
+    getEvent
 }
