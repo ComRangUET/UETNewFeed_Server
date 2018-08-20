@@ -23,6 +23,7 @@ router.delete('/students/:id', verifyPrivilege('delete_data'), adminController.d
 
 router.post('/students', verifyPrivilege('add_user'), adminController.postStudents);
 
+router.get('/students/image/:mssv', verifyPrivilege('read_data'), adminController.getImageStudent);
 
 //Privilege and roles
 router.get('/roles', verifyPrivilege('roles_privileges'), admin.getRoles);

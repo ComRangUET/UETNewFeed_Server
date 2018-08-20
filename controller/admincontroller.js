@@ -9,31 +9,30 @@ const register = require('../models/registermodels');
 
 
 async function getStudents(req, res) {
-    const { id_course, id_class, id_roles } = req.query;
-
+    const { id_course, id_class, role_id } = req.query;
     try {
         let listSv = [];
         await accounts.findAll({
-            attributes: ['id', 'full_name', 'mssv']
+            attributes: ['id', 'full_name', 'mssv', 'id_class', 'id_course', 'role_id']
         }
         ).then(function (result) {
             result.forEach(function (i) {
                 listSv.push(i.dataValues);
             })
         })
-        if (id_class) {
+        if (id_class!=undefined) {
             listSv = listSv.filter(function (sv) {
                 return sv.id_class == id_class;
             })
         }
-        if (id_course) {
+        if (id_course!=undefined) {
             listSv = listSv.filter(function (sv) {
                 return sv.id_course == id_course;
             })
         }
-        if (id_roles) {
+        if (role_id!=undefined) {
             listSv = listSv.filter(function (sv) {
-                return sv.id_roles == id_roles;
+                return sv.role_id == role_id;
             })
         }
         res.json({
@@ -290,7 +289,6 @@ function addStudentToEvent(req, res){
             })
             .then(function(data){
                 if(data==null){
-                    console.log('abc');
                     register.create({
                         id_stu: result.dataValues.id,
                         id_eve: id_eve,
@@ -374,5 +372,6 @@ module.exports = {
     deleteStudents,
     postStudents,
     configStudentJoinEvent,
-    addStudentToEvent
+    addStudentToEvent,
+    getImageStudent
 }
