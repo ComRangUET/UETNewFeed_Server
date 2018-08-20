@@ -81,7 +81,7 @@ function getEvent(req, res) {
 }
 
 async function putEvents(req, res) {
-    const { header, content, image, place, time_start, event_type } = req.body;
+    const { header, content, image, place, time_start, event_type , link_register} = req.body;
 
     try {
         if (!header || !content || !place || !time_start) throw new Error('Header or content or place or time_start or event_type are not require');
@@ -91,7 +91,8 @@ async function putEvents(req, res) {
             image: image,
             place: place,
             time_start: time_start,
-            event_type: event_type
+            event_type: event_type,
+            link_register: link_register
         },
             {
                 where: {
@@ -145,7 +146,7 @@ function deleteEvents(req, res) {
 }
 
 function postEvent(req, res) {
-    const { header, content, introduce, image, place, time_start, event_type } = req.body;
+    const { header, content, introduce, image, place, time_start, event_type, link_register } = req.body;
 
     try {
         if (!header || !content || !place || !time_start) throw new Error('header or conntent or place or time_start aren not require');
@@ -157,7 +158,8 @@ function postEvent(req, res) {
             time_start: time_start,
             event_type: event_type,
             image: image,
-            introduce: introduce
+            introduce: introduce,
+            link_register: link_register
         })
             .then(function (result) {
                 res.json({

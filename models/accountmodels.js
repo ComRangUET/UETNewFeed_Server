@@ -65,7 +65,7 @@ const accounts = con.define('account', {
         timestamps: false,
     });
 
- accounts.belongsTo(classes, { foreignKey: 'id_class' });
+accounts.belongsTo(classes, { foreignKey: 'id_class' });
 
 accounts.belongsTo(courses, { foreignKey: 'id_course' }); 
 

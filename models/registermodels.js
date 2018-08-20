@@ -2,6 +2,7 @@ const Sequelize = require('sequelize');
 
 const con = require('../config');
 const accounts = require('../models/accountmodels');
+const events = require('../models/eventmodels');
 
 const register = con.define('students_register_event', {
     id_eve: {
@@ -28,5 +29,6 @@ const register = con.define('students_register_event', {
 );
 
 register.belongsTo(accounts, {foreignKey: 'id_stu'});
+register.belongsTo(events, {foreignKey: 'id_eve'})
 
 module.exports = register;
