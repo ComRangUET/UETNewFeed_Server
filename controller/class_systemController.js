@@ -25,7 +25,7 @@ function getInforSchool(req, res){
         else {
             accounts.findAll({
                 where: {
-                    id: id_course
+                    id_course: id_course
                 },
                 attributes: [
                     [Sequelize.fn('DISTINCT', Sequelize.col('id_class')), 'id_class']

@@ -6,7 +6,6 @@ function verifyPrivileges(privilege) {
     return async(req, res, next) => {
         try {
             const role_id = req.tokenData.role_id;
-            console.log(role_id)
             await rp.roles_privileges.findAll({
                 where: { role_id: role_id },
                 include: [{

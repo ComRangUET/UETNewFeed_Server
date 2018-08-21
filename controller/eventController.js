@@ -4,8 +4,27 @@ const events = require('../models/eventmodels');
 const register = require('../models/registermodels');
 const accounts = require('../models/accountmodels');
 
+function getlistE(req, res){
+    
+    try{
+        events.count().then(function(result){
+            return res.json({
+                success: true,
+                data: result
+            })
+        })
+    }
+    catch(err){
+        return res.json({
+            success: false,
+            data: null,
+            reason: err.message
+        })
+    }
+}
 
 function getEvents(req, res) {
+    
     const { index } = req.query;
     try {
         let listEvent = [];
@@ -210,7 +229,7 @@ function getListStuRegisterEvent(req, res) {
 }
 
 function getListEventsNeedConfig(req, res) {
-    try {
+    try{
         events.findAll({
             where: {
                 event_type: 1
@@ -219,10 +238,10 @@ function getListEventsNeedConfig(req, res) {
                 ['id', 'DESC']
             ],
             attributes: ['header', 'id'],
-        }).then(function (result) {
+        }).then(function(result){
             let listEvent = [];
-            result.forEach(function (e) {
-                listEvent.push(e);
+            result.forEach(function(e){
+                listEvent.push(e.dataValues);
             })
 
             return res.json({
@@ -231,7 +250,7 @@ function getListEventsNeedConfig(req, res) {
             })
         })
     }
-    catch (err) {
+    catch(err){
         return res.json({
             success: false,
             data: null,
@@ -274,6 +293,7 @@ function getStudentsJoinEvent(req, res) {
         })
     }
 }
+
 module.exports = {
     getEvent,
     getEvents,
@@ -282,5 +302,6 @@ module.exports = {
     postEvent,
     getListStuRegisterEvent,
     getListEventsNeedConfig,
-    getStudentsJoinEvent
+    getStudentsJoinEvent,
+    getlistE
 }

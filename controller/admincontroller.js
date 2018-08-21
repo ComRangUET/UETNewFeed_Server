@@ -80,7 +80,7 @@ async function getStudent(req, res) {
 
 
 async function putStudents(req, res) {
-    const { email, mssv, faculty, id_class, id_course, full_name, phone_number } = req.body;
+    const { email, mssv, faculty, id_class, id_course, full_name, phone_number, role_id } = req.body;
     try {
         await accounts.update({
             email: email,
@@ -89,7 +89,8 @@ async function putStudents(req, res) {
             phone_number: phone_number,
             id_class: id_class,
             id_course: id_course,
-            full_name: full_name
+            full_name: full_name,
+            role_id: role_id
         }, {
                 where: {
                     id: req.params.id
@@ -141,36 +142,52 @@ function deleteStudents(req, res) {
 
 
 async function postStudents(req, res) {
-    const { user, mssv, full_name, password , id_class, id_course, faculty} = req.body;
+    
+    const { mssv, full_name , id_class, id_course, faculty} = req.body;
 
     try {
-        if (!user || !mssv || !full_name || !password) throw new Error('user or mssv or full_name or password are not required');
+        if ( !mssv || !full_name) throw new Error(' mssv or full_name are not required');
         let salt = await bcrypt.genSalt(5);
-        let hashPassword = await bcrypt.hash(password, salt);
+        let hashPassword = await bcrypt.hash(mssv, salt);
 
-        accounts.create({
-            user: user,
-            mssv: mssv,
-            full_name: full_name,
-            password: hashPassword,
-            id_class: id_class, 
-            id_course: id_course,
-            faculty: faculty
-        })
-            .then(function () {
-                res.json({
-                    success: true,
-                    data: null
-                })
-            })
-            .catch(function(err){
+        accounts.findOne({
+            where: {
+                mssv: mssv
+            }
+        }).then(function(result){
+            if(result!=null){
                 return res.json({
                     success: false,
                     data: null,
-                    message: err.message
+                    message: "mssv da ton tai"
                 })
-            })
-
+            }
+            else{
+                accounts.create({
+                    user: mssv,
+                    mssv: mssv,
+                    full_name: full_name,
+                    password: hashPassword,
+                    id_class: id_class, 
+                    id_course: id_course,
+                    faculty: faculty
+                })
+                    .then(function () {
+                        res.json({
+                            success: true,
+                            data: null
+                        })
+                    })
+                    .catch(function(err){
+                        return res.json({
+                            success: false,
+                            data: null,
+                            reason: err.message
+                        })
+                    })
+            }
+        })
+        
     } catch (err) {
         res.json({
             success: false,
