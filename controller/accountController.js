@@ -70,7 +70,7 @@ async function changePasword(req, res, next) {
     try {
         await accounts.findOne({
             where: {
-                id: req.tokenData.idaccount
+                id: req.tokenData.idaccounts
             }
         })
             .then(async (result) => {
@@ -79,7 +79,7 @@ async function changePasword(req, res, next) {
                     await accounts.update({
                         password: hashPassword
                     }, {
-                            where: { id: req.tokenData.idaccount }
+                            where: { id: req.tokenData.idaccounts }
                         })
                         .then(() => {
                             res.json({

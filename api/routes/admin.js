@@ -43,30 +43,30 @@ router.delete('/roles_privileges/:id_roles_privileges', verifyPrivilege('roles_p
 
 //class
 
-router.get('/class', classController.getListClass);
+router.get('/class',verifyPrivilege('read_data'), classController.getListClass);
 
-router.put('/class/:id_class', classController.putClassName);
+router.put('/class/:id_class',verifyPrivilege('update_data'), classController.putClassName);
 
-router.post('/class', classController.postNewClass);
+router.post('/class', verifyPrivilege('create_data'),classController.postNewClass);
 
-router.delete('/class/:id_class', classController.deleteClass);
+router.delete('/class/:id_class', verifyPrivilege('delete_data'), classController.deleteClass);
 
 
 //course
 
-router.get('/course', courseController.getCourse);
+router.get('/course', verifyPrivilege('read_data'),courseController.getCourse);
 
-router.put('/course/:id_course', courseController.putCourse);
+router.put('/course/:id_course', verifyPrivilege('update_data'), courseController.putCourse);
 
-router.post('/course', courseController.postCourse);
+router.post('/course', verifyPrivilege('create_data'),courseController.postCourse);
 
-router.delete('/course/:id_course', courseController.deleteCourse);
+router.delete('/course/:id_course', verifyPrivilege('delete_data'),courseController.deleteCourse);
 
 
-router.get('/get_list', system.getInforSchool);
+router.get('/get_list', verifyPrivilege('read_data'),system.getInforSchool);
 
-router.post('/config', verifyPrivilege('roles_privileges'), adminController.configStudentJoinEvent);
+router.post('/config', verifyPrivilege('confirm_stu_join_event'), adminController.configStudentJoinEvent);
 
-router.post('/student_event', adminController.addStudentToEvent); 
+router.post('/student_event', verifyPrivilege('add_user'),adminController.addStudentToEvent); 
 
 module.exports = router;

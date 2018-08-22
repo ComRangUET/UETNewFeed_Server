@@ -1,10 +1,10 @@
-const account = require('../models/accountmodels');
+const accounts = require('../models/accountmodels');
 const rp = require('request-promise');
 
 async function putToken(req, res) {
     try {
         accounts.update({ token: req.body.token }, {
-                where: { id: req.tokenData.idaccount }
+                where: { id: req.tokenData.idaccounts }
             })
             .then(() => {
                 res.json({

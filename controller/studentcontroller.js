@@ -11,7 +11,7 @@ function getStudent(req, res) {
     try {
         accounts.findOne({
             where: {
-                id: req.tokenData.idaccount
+                id: req.tokenData.idaccounts
             },
             include: [
                 {model: courses, attributes: ['name'], required: true},
@@ -54,7 +54,7 @@ function putStudent(req, res) {
         },
             {
                 where: {
-                    id: req.tokenData.idaccount
+                    id: req.tokenData.idaccounts
                 }
             }).then(function () {
                 return res.json({
@@ -77,6 +77,7 @@ function putStudent(req, res) {
             reason: err.message
         })
     }
+
 }
 
 function studentRegisterEvent(req, res) {
@@ -85,7 +86,7 @@ function studentRegisterEvent(req, res) {
     try{
         interested.findOne({
             where: {
-                id_stu: req.tokenData.idaccount,
+                id_stu: req.tokenData.idaccounts,
                 id_eve: id_eve
             }
         })
@@ -93,7 +94,7 @@ function studentRegisterEvent(req, res) {
             if(result==null){
                 interested.create({
                     id_eve: id_eve,
-                    id_stu: req.tokenData.idaccount
+                    id_stu: req.tokenData.idaccounts
                 }).then(function(){
                     return res.json({
                         success: true,
@@ -106,7 +107,7 @@ function studentRegisterEvent(req, res) {
                 interested.destroy({
                     where: {
                         id_eve: id_eve,
-                        id_stu: req.tokenData.idaccount
+                        id_stu: req.tokenData.idaccounts
                     }
                 }).then(function(){
                     res.json({
@@ -129,7 +130,7 @@ function getEvent(req, res){
     try{
         register.findAll({
             where: {
-                id_stu: req.tokenData.idaccount,
+                id_stu: req.tokenData.idaccounts,
                 joined: 1
             },
             include: [{model: events, attributes: ['header', 'time_start'], required: true}],
