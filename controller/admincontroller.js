@@ -147,7 +147,6 @@ async function postStudents(req, res) {
         if (!user || !mssv || !full_name || !password) throw new Error('user or mssv or full_name or password are not required');
         let salt = await bcrypt.genSalt(5);
         let hashPassword = await bcrypt.hash(password, salt);
-
         accounts.create({
             user: user,
             mssv: mssv,
