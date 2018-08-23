@@ -20,7 +20,8 @@ function getListClass(req, res){
         return res.json({
             success: false,
             data: null,
-            reason: err.message
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         })
     }
 }
@@ -46,7 +47,8 @@ function putClassName(req, res){
         res.json({
             success: false,
             data: null,
-            reason: err.message
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         })
     }
 }
@@ -67,7 +69,8 @@ function postNewClass(req, res){
         res.json({
             success: false,
             data: null,
-            reason: err.message
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         })
     }
 }
@@ -90,7 +93,8 @@ function deleteClass(req, res){
         res.json({
             success: false,
             data: null,
-            reason: err.message
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         })
     }
 }

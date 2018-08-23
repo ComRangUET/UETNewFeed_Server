@@ -60,7 +60,8 @@ function getInforSchool(req, res){
         return res.json({
             success: false,
             data: null,
-            reason: err.meessage
+            reason: err.meessage,
+            message: "Có lỗi xảy ra"
         })
     }
 }

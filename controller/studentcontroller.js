@@ -5,8 +5,6 @@ const classes = require('../models/classesmodels');
 const interested = require('../models/interestedmodels');
 const events = require('../models/eventmodels');
 
-
-
 function getStudent(req, res) {
     try {
         accounts.findOne({
@@ -30,7 +28,8 @@ function getStudent(req, res) {
             res.json({
                 success: false,
                 data: null,
-                reason: err.message
+                reason: err.message,
+                message: "Có lỗi xảy ra"
             })
         })
     }
@@ -38,7 +37,8 @@ function getStudent(req, res) {
         res.json({
             success: false,
             data: null,
-            reason: err.message
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         })
     }
 }
@@ -66,7 +66,8 @@ function putStudent(req, res) {
                 res.json({
                     success: false,
                     data: null,
-                    reason: err.message
+                    reason: err.message,
+                    message: "Có lỗi xảy ra"
                 })
             })
     }
@@ -74,7 +75,8 @@ function putStudent(req, res) {
         res.json({
             success: false,
             data: null,
-            reason: err.message
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         })
     }
 
@@ -104,24 +106,21 @@ function studentRegisterEvent(req, res) {
                 })
             }
             else{
-                interested.destroy({
-                    where: {
-                        id_eve: id_eve,
-                        id_stu: req.tokenData.idaccounts
-                    }
-                }).then(function(){
-                    res.json({
-                        success: true,
-                        data: null,
-                        message: "Bỏ quan tâm thành công"
-                    })
+                res.json({
+                    success: false,
+                    data: null,
+                    message: "Bạn đã theo dõi sự kiên này"
                 })
             }
+                
         })
     }
     catch(err){
         res.json({
-            success: false
+            success: false,
+            data: null,
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         })
     }
 }
@@ -151,7 +150,8 @@ function getEvent(req, res){
         return res.json({
             success: false,
             data: null,
-            reason: err.message
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         })
     }
 }

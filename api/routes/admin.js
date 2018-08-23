@@ -23,7 +23,6 @@ router.delete('/students/:id', verifyPrivilege('delete_data'), adminController.d
 
 router.post('/students', verifyPrivilege('add_user'), adminController.postStudents);
 
-router.get('/students/image/:mssv', verifyPrivilege('read_data'), adminController.getImageStudent);
 
 //Privilege and roles
 router.get('/roles', verifyPrivilege('roles_privileges'), admin.getRoles);
@@ -62,6 +61,7 @@ router.post('/course', verifyPrivilege('create_data'),courseController.postCours
 
 router.delete('/course/:id_course', verifyPrivilege('delete_data'),courseController.deleteCourse);
 
+router.post('/role_user', verifyPrivilege('add_user_with_role'), adminController.addUserWithRole);
 
 router.get('/get_list', verifyPrivilege('read_data'),system.getInforSchool);
 
@@ -69,6 +69,8 @@ router.post('/config', verifyPrivilege('confirm_stu_join_event'), adminControlle
 
 router.post('/student_event', verifyPrivilege('add_user'),adminController.addStudentToEvent); 
 
-router.post('/role_user', verifyPrivilege('add_user_with_role'), adminController.addUserWithRole);
+router.get('/student_event/:id_eve', verifyPrivilege('read_data'), adminController.getListStudentDefault);
+
+router.delete('/student_event', verifyPrivilege('delete_data'), adminController.deleteStudentDefault);
 
 module.exports = router;

@@ -20,7 +20,8 @@ function getCourse(req, res) {
         res.json({
             success: false,
             data: null,
-            reason: err.message
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         })
     }
 }
@@ -49,7 +50,8 @@ function putCourse(req, res) {
         res.json({
             success: false,
             data: null,
-            reason: err.message
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         })
     }
 }
@@ -71,7 +73,8 @@ function postCourse(req, res){
         res.json({
             success: false,
             data: null,
-            reason: err.message
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         })
     }
 }
@@ -94,7 +97,8 @@ function deleteCourse(req, res){
         res.json({
             success: false,
             data: null,
-            reason: err.message
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         })
     }
 }

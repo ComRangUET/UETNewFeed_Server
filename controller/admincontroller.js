@@ -6,6 +6,7 @@ const courses = require('../models/coursemodels');
 const classes = require('../models/classesmodels');
 const accounts = require('../models/accountmodels');
 const register = require('../models/registermodels');
+const events = require('../models/eventmodels');
 
 
 async function getStudents(req, res) {
@@ -13,7 +14,7 @@ async function getStudents(req, res) {
     try {
         let listSv = [];
         await accounts.findAll({
-            attributes: ['id', 'full_name', 'mssv', 'id_class', 'id_course', 'role_id']
+            attributes: ['id', 'full_name', 'mssv', 'id_class', 'id_course', 'role_id', 'phone_number']
         }
         ).then(function (result) {
             result.forEach(function (i) {
@@ -43,7 +44,8 @@ async function getStudents(req, res) {
         return res.json({
             success: false,
             data: null,
-            reason: err.message
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         });
     }
 }
@@ -73,7 +75,8 @@ async function getStudent(req, res) {
         res.json({
             success: false,
             data: null,
-            reason: err.message
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         })
     }
 }
@@ -106,7 +109,8 @@ async function putStudents(req, res) {
         res.json({
             success: false,
             data: null,
-            reason: err.message
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         })
     }
 }
@@ -135,7 +139,8 @@ function deleteStudents(req, res) {
         return res.json({
             success: false,
             data: null,
-            reason: err.message
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         });
     }
 }
@@ -182,7 +187,8 @@ async function postStudents(req, res) {
                         return res.json({
                             success: false,
                             data: null,
-                            reason: err.message
+                            reason: err.message,
+                            message: "Có lỗi xảy ra"
                         })
                     })
             }
@@ -192,7 +198,8 @@ async function postStudents(req, res) {
         res.json({
             success: false,
             data: null,
-            reason: err.message
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         })
     }
 }
@@ -274,7 +281,8 @@ function configStudentJoinEvent(req, res) {
                     res.json({
                         success: false,
                         data: null,
-                        reason: err.message
+                        reason: err.message,
+                        message: "Có lỗi xảy ra"
                     })
                 })
         })
@@ -282,11 +290,11 @@ function configStudentJoinEvent(req, res) {
             res.json({
                 success: false,
                 data: null,
-                reason: "MSSV invalid"
+                reason: err.message,
+                message: "Có lỗi xảy ra"
             })
         })
 }
-
 
 
 function addStudentToEvent(req, res){
@@ -352,35 +360,11 @@ function addStudentToEvent(req, res){
         return res.json({
             success: false,
             data: null,
-            reason: err.message
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         })
     }
 } 
-
-function getImageStudent(req, res){
-    const {mssv} = req.params;
-
-    try{
-        accounts.findOne({
-            where: {
-                mssv: mssv
-            },
-            attributes: ['image']
-        }).then(function(result){
-            return res.json({
-                success: true,
-                data: result.image
-            })
-        })
-    }
-    catch(err){
-        return res.json({
-            success: false,
-            data: null,
-            reason: err.message
-        })
-    }
-}
 
 async function addUserWithRole(req, res) {
     const { role_id, phone_number, password, full_name, email } = req.body;
@@ -425,7 +409,70 @@ async function addUserWithRole(req, res) {
     } catch (error) {
         res.json({
             success: false,
-            reason: error.message
+            reason: error.message,
+            message: "Có lỗi xảy ra"
+        })
+    }
+}
+
+function getListStudentDefault(req, res){
+    const {id_eve} = req.params;
+
+    try{
+        register.findAll({
+            where: {
+                id_eve: id_eve,
+                default_student: 1
+            },
+            include: [
+                { model: accounts, attributes: ['full_name', ], required: true },
+            ],
+            attributes: ['id', 'id_stu', 'id_eve']
+        })
+        .then(function(result){
+            let listStu = [];
+            result.forEach(function(i){
+                listStu.push(i.dataValues);
+            })
+            return res.json({
+                success: true,
+                data: listStu,
+            })
+        })
+    }
+    catch(err){
+        return res.json({
+            success: false,
+            data: null,
+            reason: err.message,
+            message: "Có lỗi xảy ra"
+        })
+    }   
+}
+
+function deleteStudentDefault(req, res){
+    const {id_eve, id_stu} = req.body;
+    console.log(id_stu);
+    try{
+        register.destroy({
+            where: {
+                id_eve: id_eve,
+                id_stu: id_stu,
+            }
+        })
+        .then(function(result){
+            return res.json({
+                success: true,
+                data: null
+            })
+        })
+    }
+    catch(err){
+        return res.json({
+            success: false,
+            data: null,
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         })
     }
 }
@@ -438,6 +485,7 @@ module.exports = {
     postStudents,
     configStudentJoinEvent,
     addStudentToEvent,
-    getImageStudent,
-    addUserWithRole
+    addUserWithRole,
+    getListStudentDefault,
+    deleteStudentDefault
 }

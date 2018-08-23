@@ -17,7 +17,8 @@ async function getRoles(req, res) {
     } catch (err) {
         res.json({
             success: false,
-            reason: err.message
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         })
     }
 }
@@ -35,7 +36,8 @@ async function postRole(req, res) {
     } catch (err) {
         res.json({
             success: false,
-            result: err.message
+            result: err.message,
+            message: "Có lỗi xảy ra"
         })
     }
 }
@@ -54,7 +56,8 @@ async function deleteRole(req, res) {
     } catch (err) {
         res.json({
             success: false,
-            reason: err.message
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         })
     }
 }
@@ -75,7 +78,8 @@ async function getPrivileges(req, res) {
     } catch (error) {
         res.json({
             success: false,
-            reason: error.message
+            reason: error.message,
+            message: "Có lỗi xảy ra"
         })
     }
 }
@@ -103,7 +107,8 @@ async function getPrivilegesForRoles(req, res) {
     } catch (err) {
         res.json({
             success: false,
-            reason: err.message
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         })
     }
 }
@@ -123,7 +128,8 @@ async function addPrivilegesForRoles(req, res) {
     } catch (error) {
         res.json({
             success: false,
-            reason: error.message
+            reason: error.message,
+            message: "Có lỗi xảy ra"
         })
 
     }
@@ -144,7 +150,8 @@ async function deletePrivilegesForRoles(req, res) {
     } catch (error) {
         res.json({
             success: false,
-            reason: error.message
+            reason: error.message,
+            message: "Có lỗi xảy ra"
         })
     }
 }

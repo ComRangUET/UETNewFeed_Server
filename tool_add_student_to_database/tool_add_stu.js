@@ -15,9 +15,6 @@ let id_course;
 async function autoAdd() {
     id_course = await seach.seachCourse(_course);
     id_class = await seach.seachClass(_class);
-    
-    console.log(id_class);
-    console.log(id_course);
     xlsxj({
         input: "abc.xlsx",
         output: "abcd.json"

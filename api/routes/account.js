@@ -1,6 +1,7 @@
 const express = require('express');
 const Router = express.Router();
 const verify = require('../../middleware/verify-token');
+const verifyPrivileges = require('../../middleware/verifyPrivileges');
 const accountController = require('../../controller/accountController');
 const RateLimit = require('express-rate-limit');
 
@@ -14,5 +15,6 @@ const loginLimiter = new RateLimit({
 
 Router.post('/login', loginLimiter, accountController.login)
 Router.put('/change_password', verify.verifyToken, accountController.changePasword);
+Router.put('/reset_password/:mssv', verify.verifyToken, verifyPrivileges('reset_password'), accountController.resetPassword)
 
 module.exports = Router;

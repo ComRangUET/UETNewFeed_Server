@@ -1,8 +1,8 @@
 
-
 const events = require('../models/eventmodels');
 const register = require('../models/registermodels');
 const accounts = require('../models/accountmodels');
+const interested = require('../models/interestedmodels');
 
 function getlistE(req, res){
     
@@ -19,7 +19,8 @@ function getlistE(req, res){
         return res.json({
             success: false,
             data: null,
-            reason: err.message
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         })
     }
 }
@@ -42,20 +43,27 @@ function getEvents(req, res) {
             })
         })
             .then(function () {
-                if(listEvent == "")
-                {
-                    return res.json({
-                        success: true,
-                        end: true,
-                        data: null
-                    })
-                } else{
-                    return res.json({
-                        success: true,
-                        data: listEvent,
-                        end: false
-                    })
-                }
+                events.count().then(function(data){
+                    let end;
+                    if(index*4 +4 >= data)
+                        end = true
+                    else
+                        end = false
+                    if(listEvent == "")
+                    {
+                        return res.json({
+                            success: true,
+                            end: end,
+                            data: null
+                        })
+                    } else{
+                        return res.json({
+                            success: true,
+                            data: listEvent,
+                            end: end
+                        })
+                    }
+                })
                 
             })
     }
@@ -63,7 +71,8 @@ function getEvents(req, res) {
         return res.json({
             success: false,
             data: null,
-            reason: err.message
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         })
     }
 }
@@ -77,17 +86,24 @@ function getEvent(req, res) {
             }
         })
         .then(function (result) {
-
-            return res.json({
-                success: true,
-                data: result.dataValues
+            interested.findAll({
+                where: {
+                    id_eve: id_eve
+                }
+            }).then(function(data){
+                return res.json({
+                    success: true,
+                    data: result.dataValues,
+                    interested: data.length
+                })
             })
         })
         .catch(function (err) {
             return res.json({
                 success: false,
                 data: null,
-                reason: err.message
+                reason: err.message,
+                message: "Có lỗi xảy ra"
             })
         })
     }
@@ -95,7 +111,8 @@ function getEvent(req, res) {
         res.json({
             success: false,
             data: null,
-            reason: err.message
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         })
     }
 }
@@ -130,7 +147,8 @@ async function putEvents(req, res) {
         res.json({
             success: false,
             data: null,
-            reason: err.message
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         })
     }
 }
@@ -160,7 +178,8 @@ function deleteEvents(req, res) {
         return res.json({
             success: false,
             data: null,
-            reason: err.message
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         })
     }
 }
@@ -194,7 +213,8 @@ function postEvent(req, res) {
         res.json({
             success: false,
             data: null,
-            reason: err.message
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         })
     }
 }
@@ -224,7 +244,8 @@ function getListStuRegisterEvent(req, res) {
         res.json({
             success: false,
             data: null,
-            reason: err.message
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         })
     }
 }
@@ -255,7 +276,8 @@ function getListEventsNeedConfig(req, res) {
         return res.json({
             success: false,
             data: null,
-            reason: err.message
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         })
     }
 }
@@ -304,5 +326,5 @@ module.exports = {
     getListStuRegisterEvent,
     getListEventsNeedConfig,
     getStudentsJoinEvent,
-    getlistE
+    getlistE,
 }
