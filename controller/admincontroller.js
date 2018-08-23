@@ -147,7 +147,7 @@ async function postStudents(req, res) {
 
     try {
         if ( !mssv || !full_name) throw new Error(' mssv or full_name are not required');
-        let salt = await bcrypt.genSalt(5);
+        let salt = await bcrypt.genSalt(10);
         let hashPassword = await bcrypt.hash(mssv, salt);
 
         accounts.findOne({
@@ -382,6 +382,54 @@ function getImageStudent(req, res){
     }
 }
 
+async function addUserWithRole(req, res) {
+    const { role_id, phone_number, password, full_name, email } = req.body;
+    try {
+        if ( !phone_number || !full_name || !email ) throw new Error(' mssv, full_name or email are not required');
+        let salt = await bcrypt.genSalt(10);
+        let hashPassword = await bcrypt.hash(password, salt);
+        accounts.findOne({
+            where: {
+                user: phone_number
+            }
+        }) 
+            .then(result => {
+                if(result != null) {
+                    res.json({
+                        success: false,
+                        message: "tài khoản đã tồn tại"
+                    })
+                } else {
+                    accounts.create({
+                        user: phone_number,
+                        password: hashPassword,
+                        full_name: full_name,
+                        role_id: role_id,
+                        email: email,
+                        phone_number:phone_number
+                    })
+                        .then(() => {
+                            res.json({
+                                success: true,  
+                            })
+                        })
+                        .catch((err) => {
+                            return res.json({
+                                success: false,
+                                data: null,
+                                reason: err.message
+                            })
+                        })
+                }
+            })
+    } catch (error) {
+        res.json({
+            success: false,
+            reason: error.message
+        })
+    }
+}
+
 module.exports = {
     getStudents,
     getStudent,
@@ -390,5 +438,6 @@ module.exports = {
     postStudents,
     configStudentJoinEvent,
     addStudentToEvent,
-    getImageStudent
+    getImageStudent,
+    addUserWithRole
 }

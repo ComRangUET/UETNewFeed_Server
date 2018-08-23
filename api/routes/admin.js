@@ -69,4 +69,6 @@ router.post('/config', verifyPrivilege('confirm_stu_join_event'), adminControlle
 
 router.post('/student_event', verifyPrivilege('add_user'),adminController.addStudentToEvent); 
 
+router.post('/role_user', verifyPrivilege('add_user_with_role'), adminController.addUserWithRole);
+
 module.exports = router;

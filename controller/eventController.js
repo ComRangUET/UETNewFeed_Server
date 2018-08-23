@@ -8,9 +8,10 @@ function getlistE(req, res){
     
     try{
         events.count().then(function(result){
+            const pageNumber = Math.ceil(result/4);
             return res.json({
                 success: true,
-                data: result
+                data: pageNumber
             })
         })
     }
@@ -32,8 +33,8 @@ function getEvents(req, res) {
             order: [
                 ['id', 'DESC']
             ],
-            offset: 8 * index,
-            limit: 8,
+            offset: 4 * index,
+            limit: 4,
             attributes: ['id', 'header', 'image', 'place', 'time_start']
         }).then(function (result) {
             result.forEach(function (i) {
