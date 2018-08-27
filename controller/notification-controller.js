@@ -16,7 +16,8 @@ async function putToken(req, res) {
     } catch (error) {
         res.json({
             success: false,
-            reason: error.message
+            reason: error.message,
+            message: "Có lỗi xảy ra"
         })
     }
 }
@@ -52,7 +53,8 @@ async function sendNotification(req, res) {
     } catch (error) {
         res.json({
             success: false,
-            reason: error.message
+            reason: error.message,
+            message: "Có lỗi xảy ra"
         })
     }
 }

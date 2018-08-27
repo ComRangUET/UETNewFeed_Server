@@ -42,7 +42,7 @@ const accounts = con.define('account', {
     },
     mssv: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
         unique: true
     },
     id_class: {
@@ -55,9 +55,6 @@ const accounts = con.define('account', {
         type: Sequelize.INTEGER
     },
     token: {
-        type: Sequelize.STRING
-    },
-    avatar: {
         type: Sequelize.STRING
     }
 },

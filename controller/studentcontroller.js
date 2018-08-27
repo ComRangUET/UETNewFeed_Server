@@ -4,10 +4,12 @@ const courses = require('../models/coursemodels');
 const classes = require('../models/classesmodels');
 const interested = require('../models/interestedmodels');
 const events = require('../models/eventmodels');
+
 const multer = require('multer');
-const xlsxtojson = require("xlsx-to-json-lc");
+
 var json2xls = require('json2xls');
 const fs = require('fs');
+
 
 
 function getStudent(req, res) {
@@ -29,19 +31,21 @@ function getStudent(req, res) {
                 data: result.dataValues
             })
         })
-            .catch(function (err) {
-                res.json({
-                    success: false,
-                    data: null,
-                    reason: err.message
-                })
+        .catch(function(err){
+            res.json({
+                success: false,
+                data: null,
+                reason: err.message,
+                message: "Có lỗi xảy ra"
             })
+        })
     }
     catch (err) {
         res.json({
             success: false,
             data: null,
-            reason: err.message
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         })
     }
 }
@@ -69,7 +73,8 @@ function putStudent(req, res) {
                 res.json({
                     success: false,
                     data: null,
-                    reason: err.message
+                    reason: err.message,
+                    message: "Có lỗi xảy ra"
                 })
             })
     }
@@ -77,7 +82,8 @@ function putStudent(req, res) {
         res.json({
             success: false,
             data: null,
-            reason: err.message
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         })
     }
 
@@ -93,38 +99,35 @@ function studentRegisterEvent(req, res) {
                 id_eve: id_eve
             }
         })
-            .then(function (result) {
-                if (result == null) {
-                    interested.create({
-                        id_eve: id_eve,
-                        id_stu: req.tokenData.idaccounts
-                    }).then(function () {
-                        return res.json({
-                            success: true,
-                            data: null,
-                            message: "Quan tâm thành công"
-                        })
+        .then(function(result){
+            if(result==null){
+                interested.create({
+                    id_eve: id_eve,
+                    id_stu: req.tokenData.idaccounts
+                }).then(function(){
+                    return res.json({
+                        success: true,
+                        data: null,
+                        message: "Quan tâm thành công"
                     })
-                }
-                else {
-                    interested.destroy({
-                        where: {
-                            id_eve: id_eve,
-                            id_stu: req.tokenData.idaccounts
-                        }
-                    }).then(function () {
-                        res.json({
-                            success: true,
-                            data: null,
-                            message: "Bỏ quan tâm thành công"
-                        })
-                    })
-                }
-            })
+                })
+            }
+            else{
+                res.json({
+                    success: false,
+                    data: null,
+                    message: "Bạn đã theo dõi sự kiên này"
+                })
+            }
+                
+        })
     }
     catch (err) {
         res.json({
-            success: false
+            success: false,
+            data: null,
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         })
     }
 }
@@ -163,7 +166,8 @@ function getEvent(req, res) {
         return res.json({
             success: false,
             data: null,
-            reason: err.message
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         })
     }
 }

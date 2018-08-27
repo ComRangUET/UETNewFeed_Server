@@ -11,7 +11,7 @@ const conn = mysql.createConnection({
 conn.connect
 
 exports.postPageToDatabase = function (url, refer, img) {
-    request(url, (err, response, body) => {
+    request(url, (err, res, body) => {
         if (!err) {
             let id_event;
             const $ = cheerio.load(body);
@@ -21,7 +21,7 @@ exports.postPageToDatabase = function (url, refer, img) {
             const values = [title, refer, content, img];
             conn.query(sql, values, (err, rows) => {
                 if (err) {
-                    res.status(403).json({
+                    res.json({
                         success: false,
                         message: err.message
                     });

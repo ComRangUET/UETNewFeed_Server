@@ -57,7 +57,8 @@ async function login(req, res) {
         res.json({
             success: false,
             data: null,
-            reason: err.message
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         });
     }
 }
@@ -65,7 +66,13 @@ async function login(req, res) {
 async function changePasword(req, res, next) {
     const password = req.body.password;
     const newPassword = req.body.newPassword;
-    let salt = await bcrypt.genSalt(5);
+    if(password == null || newPassword == null){
+        return res.json({
+            success: false,
+            message: "Bạn chưa mật khẩu cũ hoặc mật khẩu mới của bạn"
+        })
+    }
+    let salt = await bcrypt.genSalt(10);
     let hashPassword = await bcrypt.hash(newPassword, salt);
     try {
         await accounts.findOne({
@@ -76,7 +83,7 @@ async function changePasword(req, res, next) {
             .then(async (result) => {
                 const pw = await bcrypt.compare(password, result.password);
                 if (pw) {
-                    await accounts.update({
+                     accounts.update({
                         password: hashPassword
                     }, {
                             where: { id: req.tokenData.idaccounts }
@@ -86,7 +93,12 @@ async function changePasword(req, res, next) {
                                 success: true
                             })
                         })
-
+                        .catch((err) => {
+                            console.log(err);
+                            res.json({
+                                success: false
+                            })
+                        })
                 } else {
                     res.json({
                         success: false,
@@ -97,12 +109,56 @@ async function changePasword(req, res, next) {
     } catch (error) {
         res.json({
             success: false,
-            result: error.message
+            result: error.message,
+            message: "Có lỗi xảy ra"
         })
     }
 }
 
+async function resetPassword(req, res) {
+    const mssv = req.params.mssv;
+    if(mssv == null){
+        return res.json({
+            success: false,
+            message: "Bạn chưa mật khẩu cũ hoặc mật khẩu mới của bạn"
+        })
+    }
+    let salt = await bcrypt.genSalt(5);
+    let hashPassword = await bcrypt.hash(mssv, salt);
+    try{
+        accounts.findOne({
+             where: {
+                mssv: mssv
+            }})
+            .then((result) => {
+                if(result == null){
+                    res.json({
+                        success: false,
+                        message: "Tài khoản không tồn tại"
+                    })
+                } else {
+                    accounts.update({
+                        password: hashPassword
+                    }, {
+                        where: { mssv: mssv}
+                    })
+                    .then(()=> {
+                        res.json({
+                            success: true
+                        })
+                    })
+                }
+            })
+    } catch (err) {
+        res.json({
+            success: false,
+            message: "Có lỗi xảy ra",
+            reason: err.message
+        })
+    }
+}
 module.exports = {
     login,
-    changePasword
+    changePasword,
+    resetPassword
 };

@@ -20,28 +20,37 @@ function getNewsList(req, res) {
                 listNews.push(i.dataValues);
             })
         }).then(function () {
-            if(listNews == "")
-            {
-                return res.json({
-                    success: true,
-                    data: null,
-                    end: true
-                })
-            }
-            else{
-                return res.json({
-                    success: true,
-                    data: listNews,
-                    end: false
-                })
-            }
+            
+            news.count().then(function(data){
+                let end;
+                if(index*8 +8 >= data)
+                    end = true
+                else
+                    end = false
+                if(listNews == "")
+                {
+                    return res.json({
+                        success: true,
+                        data: null,
+                        end: end
+                    })
+                }
+                else{
+                    return res.json({
+                        success: true,
+                        data: listNews,
+                        end: end
+                    })
+                }
+            })  
         })
     }
     catch (err) {
         res.json({
             success: false,
             data: null,
-            reason: err.message
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         })
     }
 }
@@ -65,7 +74,8 @@ function getNews(req, res) {
         .catch(function(err){
             res.json({
                 success: false,
-                data: null
+                data: null,
+                message: "Có lỗi xảy ra"
             })
         })
     }
@@ -73,7 +83,8 @@ function getNews(req, res) {
         res.json({
             success: false,
             data: null,
-            reason: err.message
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         })
     }
 }

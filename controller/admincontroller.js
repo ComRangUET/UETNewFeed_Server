@@ -6,6 +6,7 @@ const courses = require('../models/coursemodels');
 const classes = require('../models/classesmodels');
 const accounts = require('../models/accountmodels');
 const register = require('../models/registermodels');
+const events = require('../models/eventmodels');
 
 
 async function getStudents(req, res) {
@@ -13,7 +14,7 @@ async function getStudents(req, res) {
     try {
         let listSv = [];
         await accounts.findAll({
-            attributes: ['id', 'full_name', 'mssv', 'id_class', 'id_course', 'role_id']
+            attributes: ['id', 'full_name', 'mssv', 'id_class', 'id_course', 'role_id', 'phone_number']
         }
         ).then(function (result) {
             result.forEach(function (i) {
@@ -43,7 +44,8 @@ async function getStudents(req, res) {
         return res.json({
             success: false,
             data: null,
-            reason: err.message
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         });
     }
 }
@@ -73,7 +75,8 @@ async function getStudent(req, res) {
         res.json({
             success: false,
             data: null,
-            reason: err.message
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         })
     }
 }
@@ -106,7 +109,8 @@ async function putStudents(req, res) {
         res.json({
             success: false,
             data: null,
-            reason: err.message
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         })
     }
 }
@@ -135,7 +139,8 @@ function deleteStudents(req, res) {
         return res.json({
             success: false,
             data: null,
-            reason: err.message
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         });
     }
 }
@@ -147,8 +152,7 @@ async function postStudents(req, res) {
 
     try {
         if ( !mssv || !full_name) throw new Error(' mssv or full_name are not required');
-        let salt = await bcrypt.genSalt(5);
-
+        let salt = await bcrypt.genSalt(10);
         let hashPassword = await bcrypt.hash(mssv, salt);
 
         accounts.findOne({
@@ -183,7 +187,8 @@ async function postStudents(req, res) {
                         return res.json({
                             success: false,
                             data: null,
-                            reason: err.message
+                            reason: err.message,
+                            message: "Có lỗi xảy ra"
                         })
                     })
             }
@@ -193,7 +198,8 @@ async function postStudents(req, res) {
         res.json({
             success: false,
             data: null,
-            reason: err.message
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         })
     }
 }
@@ -275,7 +281,8 @@ function configStudentJoinEvent(req, res) {
                     res.json({
                         success: false,
                         data: null,
-                        reason: err.message
+                        reason: err.message,
+                        message: "Có lỗi xảy ra"
                     })
                 })
         })
@@ -283,11 +290,11 @@ function configStudentJoinEvent(req, res) {
             res.json({
                 success: false,
                 data: null,
-                reason: "MSSV invalid"
+                reason: err.message,
+                message: "Có lỗi xảy ra"
             })
         })
 }
-
 
 
 function addStudentToEvent(req, res){
@@ -353,24 +360,83 @@ function addStudentToEvent(req, res){
         return res.json({
             success: false,
             data: null,
-            reason: err.message
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         })
     }
 } 
 
-function getImageStudent(req, res){
-    const {mssv} = req.params;
-
-    try{
+async function addUserWithRole(req, res) {
+    const { role_id, phone_number, password, full_name, email } = req.body;
+    try {
+        if ( !phone_number || !full_name || !email ) throw new Error(' mssv, full_name or email are not required');
+        let salt = await bcrypt.genSalt(10);
+        let hashPassword = await bcrypt.hash(password, salt);
         accounts.findOne({
             where: {
-                mssv: mssv
+                user: phone_number
+            }
+        }) 
+            .then(result => {
+                if(result != null) {
+                    res.json({
+                        success: false,
+                        message: "tài khoản đã tồn tại"
+                    })
+                } else {
+                    accounts.create({
+                        user: phone_number,
+                        password: hashPassword,
+                        full_name: full_name,
+                        role_id: role_id,
+                        email: email,
+                        phone_number:phone_number
+                    })
+                        .then(() => {
+                            res.json({
+                                success: true,  
+                            })
+                        })
+                        .catch((err) => {
+                            return res.json({
+                                success: false,
+                                data: null,
+                                reason: err.message
+                            })
+                        })
+                }
+            })
+    } catch (error) {
+        res.json({
+            success: false,
+            reason: error.message,
+            message: "Có lỗi xảy ra"
+        })
+    }
+}
+
+function getListStudentDefault(req, res){
+    const {id_eve} = req.params;
+
+    try{
+        register.findAll({
+            where: {
+                id_eve: id_eve,
+                default_student: 1
             },
-            attributes: ['image']
-        }).then(function(result){
+            include: [
+                { model: accounts, attributes: ['full_name', ], required: true },
+            ],
+            attributes: ['id', 'id_stu', 'id_eve']
+        })
+        .then(function(result){
+            let listStu = [];
+            result.forEach(function(i){
+                listStu.push(i.dataValues);
+            })
             return res.json({
                 success: true,
-                data: result.image
+                data: listStu,
             })
         })
     }
@@ -378,7 +444,35 @@ function getImageStudent(req, res){
         return res.json({
             success: false,
             data: null,
-            reason: err.message
+            reason: err.message,
+            message: "Có lỗi xảy ra"
+        })
+    }   
+}
+
+function deleteStudentDefault(req, res){
+    const {id_eve, id_stu} = req.body;
+    console.log(id_stu);
+    try{
+        register.destroy({
+            where: {
+                id_eve: id_eve,
+                id_stu: id_stu,
+            }
+        })
+        .then(function(result){
+            return res.json({
+                success: true,
+                data: null
+            })
+        })
+    }
+    catch(err){
+        return res.json({
+            success: false,
+            data: null,
+            reason: err.message,
+            message: "Có lỗi xảy ra"
         })
     }
 }
@@ -391,5 +485,7 @@ module.exports = {
     postStudents,
     configStudentJoinEvent,
     addStudentToEvent,
-    getImageStudent
+    addUserWithRole,
+    getListStudentDefault,
+    deleteStudentDefault
 }
