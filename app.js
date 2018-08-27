@@ -4,6 +4,9 @@ const eventRouter = require('./api/routes/event');
 const news = require('./api/routes/news');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+const json2xls = require('json2xls');
+const fs = require('fs');
+
 const newsTool = require('./toolNews/listEvent');
 const admin = require('./api/routes/admin');
 const student = require('./api/routes/student');
@@ -13,6 +16,7 @@ dotenv.config();
 const account = require('./api/routes/account');
 const notification = require('./api/routes/notification');
 const image = require('./api/routes/image');
+
 // connect to mysql
 app.use(cors());
 app.use(morgan('dev'));
@@ -20,6 +24,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.set('trust proxy', 'loopback', 'linklocal');
 app.use(express.static('upload-resize'));
+app.use(json2xls.middleware);
 
 app.use('/api/events', eventRouter);
 app.use('/api/news', news);
@@ -34,6 +39,7 @@ app.use((req, res, next) => {
         messsage: err.message
     })
 })
+
 
 //setInterval(newsTool, 1000);
 

@@ -1,6 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
+const fs = require('fs');
+const path = require('path');
+const mime = require('mime');
+
+var urlencodedParser = bodyParser.urlencoded({ extended: false })
+
 
 const adminController = require('../../controller/admincontroller');
 const admin = require('../../controller/privileges_rolesController');
@@ -9,8 +15,9 @@ const courseController = require('../../controller/courseController');
 const system = require('../../controller/class_systemController');
 const verifyPrivilege = require('../../middleware/verifyPrivileges');
 const verifyToken = require('../../middleware/verify-token');
+const exportData = require('../../controller/exportdata');
 
-router.use(verifyToken.verifyToken);
+//router.use(verifyToken.verifyToken);
 
 //Student
 router.get('/students', verifyPrivilege('read_data'), adminController.getStudents);
@@ -68,5 +75,20 @@ router.get('/get_list', verifyPrivilege('read_data'),system.getInforSchool);
 router.post('/config', verifyPrivilege('confirm_stu_join_event'), adminController.configStudentJoinEvent);
 
 router.post('/student_event', verifyPrivilege('add_user'),adminController.addStudentToEvent); 
+
+router.post('/data_event', urlencodedParser, exportData.exportStudentRegisterEvent);
+
+router.post('/data_student', urlencodedParser, exportData.exportStudentToDatabase);
+
+router.get('/getlink/:name', function(req, res){
+    res.json({
+        data: req.params.name
+    })
+    /* console.log(req.url.split('/')[req.url.split('/').length-1]);
+    var file = fs.readFileSync('./uploads/' + nameFile, 'binary');
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader('Content-Disposition', "attachment; filename=" + "data.xlsx")
+    return res.end(file, 'binary'); */
+})
 
 module.exports = router;
