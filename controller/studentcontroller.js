@@ -172,25 +172,27 @@ function getEvent(req, res) {
     }
 }
 
-const storage = multer.diskStorage({
+/* const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, './uploads/')
     },
     filename: function (req, file, cb) {
         cb(null, file.fieldname)
     }
-});
+}); */
 
 function download(req, res){
     let link = './uploads/' + req.params.file_name;
-    var file = fs.readFileSync('./uploads/' + req.params.file_name, 'binary');
+    //var file = fs.readFileSync('./uploads/' + req.params.file_name, 'binary');
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     res.setHeader('Content-Disposition', "attachment; filename=" + "data.xlsx")
     fs.unlink(link, function(err){
         if(err) res.json({
             success: false
         })
-        return res.end(file, 'binary');
+        res.sendFile('abc.xlsx', { root: path.join(__dirname, './uploads') });
+        return res.sendFile('/uploads/' + req.params.file_name, {root: __dirname})
+        //return res.end(file, 'binary');
     })  
 }
 
