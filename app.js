@@ -35,7 +35,7 @@ app.use('/api/', image);
 app.use('/api', account);
 app.use('/api/student', student);
 app.use('/api/notification', notification);
-app.use('api/public', people);
+app.use('/api/public', people);
 
 
 app.use((req, res, next) => {

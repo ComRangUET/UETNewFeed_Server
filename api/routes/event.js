@@ -6,8 +6,6 @@ const verifyPrivileges = require('../../middleware/verifyPrivileges');
 const verifyToken = require('../../middleware/verify-token');
 
 
-//router.use(verifyToken.verifyToken);
-
 router.get('/page', eventController.getlistE);
 
 router.get('/:id_eve', eventController.getEvent);

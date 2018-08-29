@@ -12,6 +12,5 @@ router.post('/', verifyModel.verifyToken,  student.studentRegisterEvent);
 
 router.get('/events', verifyModel.verifyToken, student.getEvent);
 
-router.get('/download/:file_name', student.download);
 
 module.exports = router;

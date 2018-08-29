@@ -153,8 +153,9 @@ function getEvent(req, res) {
                 }
                 var xls = json2xls(list);
                 const file_name = Date.now() + "-" +"data.xlsx";
-                const full_url = "localhost:3006/api/student/download/" + file_name;
+                const full_url = "qldv.uet.vnu.edu.vn/api/public/download/" + file_name;
                 fs.writeFileSync("./uploads/" + file_name, xls, 'binary');
+                console.log(full_url);
                 return res.json({
                     success: true,
                     data: listEvent,
@@ -172,24 +173,10 @@ function getEvent(req, res) {
     }
 }
 
-function download(req, res){
-    let link = './uploads/' + req.params.file_name;
-    var file = fs.readFileSync('./uploads/' + req.params.file_name, 'binary');
-    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    res.setHeader('Content-Disposition', "attachment; filename=" + "data.xlsx")
-    fs.unlink(link, function(err){
-        if(err) res.json({
-            success: false,
-            message: "file không tồn tại"
-        })
-        return res.end(file, 'binary');
-    })  
-}
 
 module.exports = {
     getStudent,
     putStudent,
     studentRegisterEvent,
     getEvent,
-    download
 } 
