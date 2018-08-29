@@ -509,13 +509,20 @@ async function getListEventStudentJoined(req, res){
                 let listE = [];
                 let list = [];
                 data.forEach(function(i){
-                    data.push(i.dataValues)
+                    listE.push(i.dataValues)
                 })
-                
+                for(let i=0;i<result.length;i++)
+                {
+                    list[i] = result[i].dataValues.event.dataValues;
+                }
+                var xls = json2xls(list);
+                const file_name = Date.now() + "-" +"data.xlsx";
+                const full_url = "qldv.uet.vnu.edu.vn/api/public/download/" + file_name;
+                fs.writeFileSync("./uploads/" + file_name, xls, 'binary');
                 return res.json({
                     success: true,
                     data: listE,
-                    filename: file_name
+                    filename: full_url
                 })
             })
         }

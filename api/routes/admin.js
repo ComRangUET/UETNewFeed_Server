@@ -15,7 +15,7 @@ const verifyPrivilege = require('../../middleware/verifyPrivileges');
 const verifyToken = require('../../middleware/verify-token');
 const exportData = require('../../controller/exportdata');
 
-//router.use(verifyToken.verifyToken);
+router.use(verifyToken.verifyToken);
 
 //Student
 router.get('/students', verifyPrivilege('read_data'), adminController.getStudents);
@@ -82,7 +82,7 @@ router.get('/student_event/:id_eve', verifyPrivilege('read_data'), adminControll
 
 router.delete('/student_event', verifyPrivilege('delete_data'), adminController.deleteStudentDefault);
 
-router.get('/event_student_joinded/:mssv', verifyPrivilege('read_data'), adminController.getListEventStudentJoined);
+router.get('/events_student_joinded/:mssv', verifyPrivilege('read_data'), adminController.getListEventStudentJoined);
 
 
 module.exports = router;
