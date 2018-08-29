@@ -164,5 +164,6 @@ module.exports = {
     getPrivileges,
     getPrivilegesForRoles,
     addPrivilegesForRoles,
-    deletePrivilegesForRoles
+    deletePrivilegesForRoles,
+    
 }

@@ -1,5 +1,7 @@
 const Sequelize = require('sequelize');
 const bcrypt = require('bcrypt');
+const json2xls = require('json2xls');
+const fs = require('fs');
 
 const courses = require('../models/coursemodels');
 
@@ -477,6 +479,58 @@ function deleteStudentDefault(req, res){
     }
 }
 
+async function getListEventStudentJoined(req, res){
+    const {mssv} = req.params;
+    try{
+        const result = await accounts.findOne({
+            where: {
+                mssv: mssv
+            }
+        })
+        if(result==null){
+            res.json({
+                success: false,
+                data: null,
+                message: "Không tồn tại sinh viên này"
+            })
+        }
+        else{
+            register.findAll({
+                where: {
+                    id_stu: result.dataValues.id,
+                    joined: 1
+                },
+                include: [  {model: events, attributes: ['header', 'time_start'], required: true },
+                            {model: accounts, attributes: ['full_name'], required:true}
+                        ],
+                attributes: []
+            })
+            .then(function(data){
+                let listE = [];
+                let list = [];
+                data.forEach(function(i){
+                    data.push(i.dataValues)
+                })
+                
+                return res.json({
+                    success: true,
+                    data: listE,
+                    filename: file_name
+                })
+            })
+        }
+
+    }
+    catch(err){
+        return res.json({
+            success: false,
+            data: null,
+            reason: err.message
+        })
+    }
+}
+
+
 module.exports = {
     getStudents,
     getStudent,
@@ -487,5 +541,6 @@ module.exports = {
     addStudentToEvent,
     addUserWithRole,
     getListStudentDefault,
-    deleteStudentDefault
+    deleteStudentDefault,
+    getListEventStudentJoined,
 }
