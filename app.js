@@ -26,6 +26,7 @@ app.set('trust proxy', 'loopback', 'linklocal');
 app.use(express.static('upload-resize'));
 app.use(json2xls.middleware);
 
+
 app.use('/api/events', eventRouter);
 app.use('/api/news', news);
 app.use('/api/admin', admin);
