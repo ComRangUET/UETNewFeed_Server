@@ -16,6 +16,7 @@ dotenv.config();
 const account = require('./api/routes/account');
 const notification = require('./api/routes/notification');
 const image = require('./api/routes/image');
+const people = require('./api/routes/people');
 
 // connect to mysql
 app.use(cors());
@@ -33,6 +34,9 @@ app.use('/api/', image);
 app.use('/api', account);
 app.use('/api/student', student);
 app.use('/api/notification', notification);
+app.use('api/public', people);
+
+
 app.use((req, res, next) => {
     const err = new Error('Not found');
     res.status(404).json({

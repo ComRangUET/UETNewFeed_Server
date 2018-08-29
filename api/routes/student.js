@@ -4,15 +4,13 @@ const student = require('../../controller/studentcontroller')
 const verifyModel = require('../../middleware/verify-token');
 
 
-//router.use(verifyModel.verifyToken);
+router.get('/', verifyModel.verifyToken,  student.getStudent);
 
-router.get('/', student.getStudent);
+router.put('/', verifyModel.verifyToken,  student.putStudent);
 
-router.put('/', student.putStudent);
+router.post('/', verifyModel.verifyToken,  student.studentRegisterEvent);
 
-router.post('/', student.studentRegisterEvent);
-
-router.get('/events', student.getEvent);
+router.get('/events', verifyModel.verifyToken, student.getEvent);
 
 router.get('/download/:file_name', student.download);
 

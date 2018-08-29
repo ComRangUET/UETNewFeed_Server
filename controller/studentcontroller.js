@@ -1,14 +1,13 @@
+const json2xls = require('json2xls');
+const fs = require('fs');
+
+
 const accounts = require('../models/accountmodels');
 const register = require('../models/registermodels');
 const courses = require('../models/coursemodels');
 const classes = require('../models/classesmodels');
 const interested = require('../models/interestedmodels');
 const events = require('../models/eventmodels');
-
-const multer = require('multer');
-
-var json2xls = require('json2xls');
-const fs = require('fs');
 
 
 
@@ -152,14 +151,15 @@ function getEvent(req, res) {
                 {
                     list[i] = result[i].dataValues.event.dataValues;
                 }
-                    var xls = json2xls(list);
-                    const file_name = Date.now()+ "-" + req.tokenData.idaccounts + "-" +"data.xlsx";
-                    fs.writeFileSync("./uploads/" + file_name, xls, 'binary');
-                    return res.json({
-                        success: true,
-                        data: listEvent,
-                        filename: file_name
-                    })
+                var xls = json2xls(list);
+                const file_name = Date.now() + "-" +"data.xlsx";
+                const full_url = "localhost:3006/api/student/download/" + file_name;
+                fs.writeFileSync("./uploads/" + file_name, xls, 'binary');
+                return res.json({
+                    success: true,
+                    data: listEvent,
+                    filename: full_url
+                })
             })
     }
     catch (err) {
@@ -172,27 +172,17 @@ function getEvent(req, res) {
     }
 }
 
-/* const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, './uploads/')
-    },
-    filename: function (req, file, cb) {
-        cb(null, file.fieldname)
-    }
-}); */
-
 function download(req, res){
     let link = './uploads/' + req.params.file_name;
-    //var file = fs.readFileSync('./uploads/' + req.params.file_name, 'binary');
+    var file = fs.readFileSync('./uploads/' + req.params.file_name, 'binary');
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     res.setHeader('Content-Disposition', "attachment; filename=" + "data.xlsx")
     fs.unlink(link, function(err){
         if(err) res.json({
-            success: false
+            success: false,
+            message: "file không tồn tại"
         })
-        res.sendFile('abc.xlsx', { root: path.join(__dirname, './uploads') });
-        return res.sendFile('/uploads/' + req.params.file_name, {root: __dirname})
-        //return res.end(file, 'binary');
+        return res.end(file, 'binary');
     })  
 }
 
