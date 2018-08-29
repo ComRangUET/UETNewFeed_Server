@@ -15,7 +15,7 @@ const verifyPrivilege = require('../../middleware/verifyPrivileges');
 const verifyToken = require('../../middleware/verify-token');
 const exportData = require('../../controller/exportdata');
 
-//router.use(verifyToken.verifyToken);
+router.use(verifyToken.verifyToken);
 
 //Student
 router.get('/students', verifyPrivilege('read_data'), adminController.getStudents);
