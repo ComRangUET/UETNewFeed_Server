@@ -46,7 +46,7 @@ function uploadFile(req, res, next) {
             })
         } else {
             const fullUrl = req.protocol + '://' +
-                req.get('host') + '/' +
+                req.hostname + '/' +
                 req.file.filename;
             const filePathUploads = `./uploads/${req.file.filename}`;
             gm(`./uploads/${req.file.filename}`)
