@@ -2,6 +2,7 @@ const multer = require('multer');
 const height = 256;
 const gm = require('gm').subClass({ imageMagick: true });
 const fs = require('fs');
+const hostname = "qldv.uet.vnu.edu.vn";
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -46,8 +47,7 @@ function uploadFile(req, res, next) {
             })
         } else {
             const fullUrl = req.protocol + '://' +
-                req.get('host') + '/' +
-                req.file.filename;
+              	hostname+ '/upload/' + req.file.filename;
             const filePathUploads = `./uploads/${req.file.filename}`;
             gm(`./uploads/${req.file.filename}`)
                 .resize(null, height)
