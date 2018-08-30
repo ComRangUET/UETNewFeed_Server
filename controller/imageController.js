@@ -51,7 +51,7 @@ function uploadFile(req, res, next) {
             const filePathUploads = `./uploads/${req.file.filename}`;
             gm(`./uploads/${req.file.filename}`)
                 .resize(null, height)
-                .write(`./api/upload-resize/${req.file.filename}`, err => {
+                .write(`./upload-resize/${req.file.filename}`, err => {
                     if (err) {
                         res.json({
                             success: false,
