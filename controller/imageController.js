@@ -47,7 +47,7 @@ function uploadFile(req, res, next) {
             })
         } else {
             const fullUrl = req.protocol + '://' +
-              	hostname+ '/api/' + req.file.filename;
+              	hostname+ '/upload/' + req.file.filename;
             const filePathUploads = `./uploads/${req.file.filename}`;
             gm(`./uploads/${req.file.filename}`)
                 .resize(null, height)
