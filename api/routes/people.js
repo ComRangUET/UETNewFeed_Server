@@ -3,6 +3,6 @@ const router = express.Router();
 
 const people = require('../../controller/peopleController');
 
-router.post('/download/:file_name', people.download);
+router.get('/download/:file_name', people.download);
 
 module.exports = router;
