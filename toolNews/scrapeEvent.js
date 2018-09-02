@@ -1,14 +1,7 @@
 const request = require('request');
 const cheerio = require('cheerio');
-const mysql =require('mysql');
-const conn = mysql.createConnection({
-    host: 'localhost',
-    user: "root",
-    password: "",
-    database: "qldv"
-})
-
-conn.connect
+const con = require('../config');
+const news = require('../models/newsmodels');
 
 exports.postPageToDatabase = function (url, refer, img) {
     request(url, (err, res, body) => {
@@ -19,15 +12,20 @@ exports.postPageToDatabase = function (url, refer, img) {
             const content = '<meta name="viewport" content="initial-scale=1, maximum-scale=1">'+$('#content article div.single-post-content-text.content-pad').html();
             const sql = 'INSERT INTO news (header,introduce_news,content,image) VALUES (?,?,?,?)';
             const values = [title, refer, content, img];
-            conn.query(sql, values, (err, rows) => {
-                if (err) {
-                    res.json({
-                        success: false,
-                        message: err.message
-                    });
-                }
+
+            news.create({
+                header: title,
+                introduce: refer,
+                content: content,
+                image: img
+            })
+            .then(() => {
                 console.log('push success');
-            });
+            })
+            .catch((err) => {
+                console.log(err.message);
+            })
+
         } else {
             res.status(403).json({
                 success: false,

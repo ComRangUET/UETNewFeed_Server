@@ -41,8 +41,11 @@ function scanAndUpNews() {
         } else {
             return;
         }
-        
     });
  }
 
+<<<<<<< HEAD
 setInterval(scanAndUpNews, 300000);
+=======
+ setInterval(scanAndUpNews, 1000);
+>>>>>>> 387458810a495e8659d56027efda7e1517992360
