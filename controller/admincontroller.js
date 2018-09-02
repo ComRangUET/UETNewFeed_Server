@@ -500,9 +500,7 @@ async function getListEventStudentJoined(req, res){
                     id_stu: result.dataValues.id,
                     joined: 1
                 },
-                include: [  {model: events, attributes: ['header', 'time_start'], required: true },
-                            {model: accounts, attributes: ['full_name'], required:true}
-                        ],
+                include: [  {model: events, attributes: ['header', 'time_start'], required: true }],
                 attributes: []
             })
             .then(function(data){
@@ -511,10 +509,11 @@ async function getListEventStudentJoined(req, res){
                 data.forEach(function(i){
                     listE.push(i.dataValues)
                 })
-                for(let i=0;i<result.length;i++)
+                for(let i=0;i<data.length;i++)
                 {
-                    list[i] = result[i].dataValues.event.dataValues;
+                    list[i] = data[i].dataValues.event.dataValues;
                 }
+                console.log(list);
                 var xls = json2xls(list);
                 const file_name = Date.now() + "-" +"data.xlsx";
                 const full_url = "qldv.uet.vnu.edu.vn/api/public/download/" + file_name;

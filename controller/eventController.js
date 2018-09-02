@@ -118,7 +118,7 @@ function getEvent(req, res) {
 }
 
 async function putEvents(req, res) {
-    const { header, content, image, place, time_start, event_type , link_register} = req.body;
+    const { header, content, image, place, time_start, event_type , link_register, introduce} = req.body;
 
     try {
         if (!header || !content || !place || !time_start) throw new Error('Header or content or place or time_start or event_type are not require');
@@ -129,7 +129,8 @@ async function putEvents(req, res) {
             place: place,
             time_start: time_start,
             event_type: event_type,
-            link_register: link_register
+            link_register: link_register,
+            introduce: introduce
         },
             {
                 where: {
