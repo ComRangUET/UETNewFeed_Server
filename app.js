@@ -7,7 +7,6 @@ const bodyParser = require('body-parser');
 const json2xls = require('json2xls');
 const fs = require('fs');
 
-const newsTool = require('./toolNews/listEvent');
 const admin = require('./api/routes/admin');
 const student = require('./api/routes/student');
 const cors = require('cors');
@@ -44,8 +43,5 @@ app.use((req, res, next) => {
         messsage: err.message
     })
 })
-
-
-//setInterval(newsTool, 1000);
 
 module.exports = app;
