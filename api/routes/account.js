@@ -13,7 +13,7 @@ const loginLimiter = new RateLimit({
     message: "Bạn đã đăng nhập quá nhiều lần, hãy thử  lại sau 15 phút nữa."
 })
 
-Router.post('/login', accountController.login)
+Router.post('/login',loginLimiter,accountController.login)
 Router.put('/change_password', verify.verifyToken, accountController.changePasword);
 Router.put('/reset_password/:mssv', verify.verifyToken, verifyPrivileges('reset_password'), accountController.resetPassword)
 

@@ -4,7 +4,7 @@ const fs = require('fs');
 const scrapeEvent = require('./scrapeEvent');
 const url = 'https://uet.vnu.edu.vn/category/tin-tuc/tin-sinh-vien/';
 
- module.exports = function scanAndUpNews() {
+function scanAndUpNews() {
     request(url, (err, Response, body) => {
         let idFile = fs.readFileSync(__dirname + '/text.txt', 'utf8');
         const $ = cheerio.load(body);
@@ -44,3 +44,5 @@ const url = 'https://uet.vnu.edu.vn/category/tin-tuc/tin-sinh-vien/';
         
     });
  }
+
+setInterval(scanAndUpNews, 300000);
