@@ -12,7 +12,7 @@ exports.postPageToDatabase = function (url, refer, img) {
             const content = '<meta name="viewport" content="initial-scale=1, maximum-scale=1">'+$('#content article div.single-post-content-text.content-pad').html();
             news.create({
                 header: title,
-                introduce_news: refer,
+                introduce: refer,
                 content: content,
                 image: img
             })

@@ -7,7 +7,7 @@ const news = con.define('news', {
     header: {
         type: Sequelize.TEXT
     },
-    introduce: {
+    introduce_news: {
         type: Sequelize.TEXT
     },
     content: {

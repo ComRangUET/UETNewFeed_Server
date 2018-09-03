@@ -41,7 +41,6 @@ function scanAndUpNews() {
         } else {
             return;
         }
+        
     });
  }
-
-setInterval(scanAndUpNews, 1000);

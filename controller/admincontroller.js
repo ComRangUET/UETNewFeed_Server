@@ -9,6 +9,7 @@ const classes = require('../models/classesmodels');
 const accounts = require('../models/accountmodels');
 const register = require('../models/registermodels');
 const events = require('../models/eventmodels');
+const interested = require('../models/interestedmodels');
 
 
 async function getStudents(req, res) {
@@ -125,6 +126,12 @@ function deleteStudents(req, res) {
                 id_stu: req.params.id
             }
         });
+
+	interested.destroy({
+		where: {
+			id_stu: req.params.id
+		}
+	});
 
         accounts.destroy({
             where: {

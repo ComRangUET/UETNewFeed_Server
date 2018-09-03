@@ -161,6 +161,12 @@ function deleteEvents(req, res) {
                 id_eve: req.params.id_eve
             }
         });
+	
+	interested.destroy({
+		where: {
+			id_eve: req.params.id_eve
+		}
+	});
 
         events.destroy({
             where: {
