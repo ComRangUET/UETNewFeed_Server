@@ -122,7 +122,7 @@ function deleteStudents(req, res) {
     try {
         register.destroy({
             where: {
-                id: req.params.id
+                id_stu: req.params.id
             }
         });
 
