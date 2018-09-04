@@ -72,8 +72,7 @@ function putStudent(req, res) {
                 res.json({
                     success: false,
                     data: null,
-                    reason: err.message,
-                    message: "Có lỗi xảy ra"
+                    message: err.message
                 })
             })
     }
