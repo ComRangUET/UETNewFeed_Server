@@ -403,7 +403,7 @@ async function addUserWithRole(req, res) {
                             return res.json({
                                 success: false,
                                 data: null,
-                                reason: err.message
+                                message: err.message
                             })
                         })
                 }
