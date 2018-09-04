@@ -20,7 +20,7 @@ limiter({
   }
 });
 
-Router.post('/login', loginLimiter,accountController.login)
+Router.post('/login',accountController.login)
 
 Router.put('/change_password', verify.verifyToken, accountController.changePasword);
 Router.put('/reset_password/:mssv', verify.verifyToken, verifyPrivileges('reset_password'), accountController.resetPassword)

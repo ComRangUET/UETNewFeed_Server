@@ -18,7 +18,10 @@ const accounts = con.define('account', {
     },
     password: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            len: { args: [8, 20], msg: "Độ dài mật khẩu phải lớn hơn bằng 8 kí tự." },
+        }
 
     },
     email: {
