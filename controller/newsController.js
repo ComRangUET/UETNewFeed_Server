@@ -1,5 +1,3 @@
-
-
 const news = require('../models/newsmodels');
 
 
@@ -14,7 +12,7 @@ function getNewsList(req, res) {
             ],
             offset: 8 * index,
             limit: 8,
-            attributes: ['id', 'header', 'introduce', 'image']
+            attributes: ['id', 'header', 'introduce_news', 'image']
         }).then(function (result) {
             result.forEach(function (i) {
                 listNews.push(i.dataValues);

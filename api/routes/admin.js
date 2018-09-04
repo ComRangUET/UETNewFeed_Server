@@ -82,7 +82,6 @@ router.get('/student_event/:id_eve', verifyPrivilege('read_data'), adminControll
 
 router.delete('/student_event', verifyPrivilege('delete_data'), adminController.deleteStudentDefault);
 
-router.get('/events_student_joinded/:mssv', verifyPrivilege('read_data'), adminController.getListEventStudentJoined);
-
+router.get('/events_student_joined/:mssv', verifyPrivilege('read_data'), adminController.getListEventStudentJoined);
 
 module.exports = router;

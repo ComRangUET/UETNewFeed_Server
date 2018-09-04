@@ -113,9 +113,9 @@ function studentRegisterEvent(req, res) {
             }
             else{
                 res.json({
-                    success: false,
+                    success: true,
                     data: null,
-                    message: "Bạn đã theo dõi sự kiên này"
+                    message: "Bạn Đã Theo Dõi Sự Kiện Này "
                 })
             }
                 
