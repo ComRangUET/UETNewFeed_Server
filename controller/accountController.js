@@ -96,7 +96,8 @@ async function changePasword(req, res, next) {
                         .catch((err) => {
                             console.log(err);
                             res.json({
-                                success: false
+                                success: false,
+				message: err.message
                             })
                         })
                 } else {
