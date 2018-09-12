@@ -9,6 +9,7 @@ const classes = require('../models/classesmodels');
 const accounts = require('../models/accountmodels');
 const register = require('../models/registermodels');
 const events = require('../models/eventmodels');
+const interested = require('../models/interestedmodels');
 
 
 async function getStudents(req, res) {
@@ -122,9 +123,15 @@ function deleteStudents(req, res) {
     try {
         register.destroy({
             where: {
-                id: req.params.id
+                id_stu: req.params.id
             }
         });
+
+	interested.destroy({
+		where: {
+			id_stu: req.params.id
+		}
+	});
 
         accounts.destroy({
             where: {
@@ -403,7 +410,7 @@ async function addUserWithRole(req, res) {
                             return res.json({
                                 success: false,
                                 data: null,
-                                reason: err.message
+                                message: err.message
                             })
                         })
                 }

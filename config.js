@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 
+
 const con = new Sequelize('qldv', 'root', '', {
 
     host: 'localhost',
@@ -13,7 +14,5 @@ const con = new Sequelize('qldv', 'root', '', {
         idle: 10000
     },
 });
-
-//con.sync();
 
 module.exports = con; 

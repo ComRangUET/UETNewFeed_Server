@@ -11,7 +11,12 @@ async function putToken(req, res) {
                     success: true
                 })
             })
-            .catch(err => console.log(err));
+            .catch(err => 
+                res.json({
+                    success: false,
+                    reason: err.message
+                })
+            );
 
     } catch (error) {
         res.json({

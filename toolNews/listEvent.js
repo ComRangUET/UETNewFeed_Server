@@ -4,9 +4,11 @@ const fs = require('fs');
 const scrapeEvent = require('./scrapeEvent');
 const url = 'https://uet.vnu.edu.vn/category/tin-tuc/tin-sinh-vien/';
 
- module.exports = function scanAndUpNews() {
+function scanAndUpNews() {
     request(url, (err, Response, body) => {
-        let idFile = fs.readFileSync(__dirname + '/text.txt', 'utf8');
+        if(err)
+		console.log(err.message);
+	let idFile = fs.readFileSync(__dirname + '/text.txt', 'utf8');
         const $ = cheerio.load(body);
         //for (let 0 = 7; 0 >= 0; 0--) {
         const classNameList1 = $('#content div.blog-listing').children().eq(0).attr('class');
@@ -41,6 +43,7 @@ const url = 'https://uet.vnu.edu.vn/category/tin-tuc/tin-sinh-vien/';
         } else {
             return;
         }
-        
     });
  }
+
+setInterval(scanAndUpNews, 45*60*1000);

@@ -72,8 +72,7 @@ function putStudent(req, res) {
                 res.json({
                     success: false,
                     data: null,
-                    reason: err.message,
-                    message: "Có lỗi xảy ra"
+                    message: err.message
                 })
             })
     }
@@ -113,9 +112,9 @@ function studentRegisterEvent(req, res) {
             }
             else{
                 res.json({
-                    success: false,
+                    success: true,
                     data: null,
-                    message: "Bạn đã theo dõi sự kiên này"
+                    message: "Bạn Đã Theo Dõi Sự Kiện Này "
                 })
             }
                 
