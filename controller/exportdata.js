@@ -1,3 +1,4 @@
+
 const multer = require('multer');
 const xlstojson = require("xls-to-json-lc");
 const xlsxtojson = require("xlsx-to-json-lc");
@@ -130,19 +131,28 @@ function exportStudentToDatabase(req, res) {
             console.log(num);
             for (let i = num; i < result.length; i++) {
                  if (result[i].mssv == "")
-                    break; 
+                   break; 
                 let data = result[i].mssv;
                 var salt = bcrypt.genSaltSync(5);
                 var hashPassword = bcrypt.hashSync(data, salt);
-                await accounts.create({
-                    user: result[i].mssv,
-                    password: hashPassword,
-                    mssv: result[i].mssv,
-                    full_name: result[i].name,
-                    id_class: id_class,
-                    id_course: id_course,
-                    faculty: _faculty
-                })
+                try{
+                    await accounts.create({
+                        user: result[i].mssv,
+                        password: hashPassword,
+                        mssv: result[i].mssv,
+                        full_name: result[i].name,
+                        id_class: id_class,
+                        id_course: id_course,
+                        faculty: _faculty
+                    })
+                }
+                catch(err){
+                    return res.json({
+                        success: false,
+                        message: "Đã có lỗi xảy ra",
+                        reason: err.message
+                    })
+                } 
             }
             return res.json({
                 success: true,
