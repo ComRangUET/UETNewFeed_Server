@@ -69,7 +69,13 @@ async function changePasword(req, res, next) {
     if(password == null || newPassword == null){
         return res.json({
             success: false,
-            message: "Bạn chưa mật khẩu cũ hoặc mật khẩu mới của bạn"
+            message: "Bạn chưa nhập mật khẩu cũ hoặc mật khẩu mới của bạn"
+        })
+    }
+    if(newPassword.length < 8){
+        return res.json({
+            success: false,
+            message: "Mật khẩu phải có độ dài lớn hơn hoặc bằng tám kí tự"
         })
     }
     let salt = await bcrypt.genSalt(10);

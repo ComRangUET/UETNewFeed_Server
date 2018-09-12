@@ -1,7 +1,11 @@
 const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 
 
 const classesController = require('../models/classesmodels');
+const account = require('../models/accountmodels');
+const interested = require('../models/interestedmodels');
+const register = require('../models/registermodels');
 
 function getListClass(req, res){
     try{
@@ -75,9 +79,44 @@ function postNewClass(req, res){
     }
 }
 
-function deleteClass(req, res){
+async function deleteClass(req, res){
     const {id_class} = req.params;
-    try{
+
+    const result = await account.findAll({
+        where: {
+            id_class: id_class
+        }
+    })
+    let listId = [];
+    result.forEach(function(i){
+        listId.push(i.dataValues.id);
+    })
+
+    const data1 = await interested.destroy({
+        where: {
+            id_stu: {
+                [Op.in]: listId
+            }
+        }
+    })
+
+    const data2 = await register.destroy({
+        where: {
+            id_stu: {
+                [Op.in]: listId
+            }
+        }
+    })
+
+    const data3 = await account.destroy({
+        where: {
+            id: {
+                [Op.in]: listId
+            }
+        }
+    })
+
+     try{
         classesController.destroy({
             where: {
                 id: id_class
@@ -96,7 +135,7 @@ function deleteClass(req, res){
             reason: err.message,
             message: "Có lỗi xảy ra"
         })
-    }
+    } 
 }
 
 module.exports = {
